@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>The Perfect Match | Book Fire &amp; Ash for Your Event</title>
+<meta name="description" content="Think we're the perfect match to light up your night? Two minutes, a few questions, and your Florida event date is on our radar. We reply within one business day.">
+<link rel="canonical" href="https://fireandashevents.com/inquire">
+<meta property="og:title" content="The Perfect Match | Fire &amp; Ash">
+<meta property="og:description" content="Tell us about your event. We reply within one business day.">
+<meta property="og:image" content="https://fireandashevents.com/assets/img/og-card.jpg">
+<meta property="og:site_name" content="Fire &amp; Ash Events">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://fireandashevents.com/assets/img/og-card.jpg">
+<meta name="theme-color" content="#0e0c0a">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+  {"@type":"ListItem","position":1,"name":"Home","item":"https://fireandashevents.com/"},
+  {"@type":"ListItem","position":2,"name":"The Perfect Match","item":"https://fireandashevents.com/inquire"}
+]}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="/">Fire <em>&amp;</em> Ash <small>Mobile Cigar Lounge</small></a>
+  <button class="menu-btn" aria-expanded="false" aria-label="Open menu">
+    <span>Menu</span>
+    <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
+  </button>
+</header>
+
+<div class="menu-overlay">
+  <div class="menu-doors" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <button class="menu-close" aria-label="Close menu">Close <span aria-hidden="true">✕</span></button>
+  <nav class="menu-inner">
+    <a href="/"><small>01</small>Home</a>
+    <a href="/services"><small>02</small>Services</a>
+    <a href="/about"><small>03</small>About</a>
+    <a href="/gallery"><small>04</small>Gallery</a>
+    <a href="/inquire"><small>05</small>The Perfect Match</a>
+    <a href="/reserve"><small>06</small>Fire &amp; Ash Reserve</a>
+  </nav>
+  <div class="menu-foot">Florida based · Serving events nationwide · <a href="mailto:hello@fireandashevents.com">hello@fireandashevents.com</a></div>
+</div>
+
+<section class="match-shell">
+  <div class="wrap" style="width:100%">
+    <span class="label">The Perfect Match</span>
+    <div class="match-progress" aria-hidden="true">
+      <i class="done"></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+
+    <form id="match-form" name="perfect-match" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="perfect-match">
+      <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+      <!-- Step 1: event type -->
+      <div class="match-step active">
+        <span class="match-q">Question 01</span>
+        <h2>Think we're the perfect match to light up <em>your night?</em> Tell us the occasion.</h2>
+        <input type="hidden" name="event-type" required>
+        <div class="chip-row">
+          <button type="button" class="chip" data-value="Wedding">A wedding</button>
+          <button type="button" class="chip" data-value="Golf tournament">A golf tournament</button>
+          <button type="button" class="chip" data-value="Corporate event">A corporate event</button>
+          <button type="button" class="chip" data-value="Private celebration">A private celebration</button>
+          <button type="button" class="chip" data-value="Something else">Something else</button>
+        </div>
+        <div class="match-nav"></div>
+      </div>
+
+      <!-- Step 2: date -->
+      <div class="match-step">
+        <span class="match-q">Question 02</span>
+        <h2>When does the torch <em>light?</em></h2>
+        <div class="field">
+          <label for="event-date">Event date (best guess is fine)</label>
+          <input type="date" id="event-date" name="event-date" required>
+        </div>
+        <div class="match-nav">
+          <button type="button" class="btn" data-next>Next</button>
+          <button type="button" class="back" data-back>Back</button>
+        </div>
+      </div>
+
+      <!-- Step 3: guests -->
+      <div class="match-step">
+        <span class="match-q">Question 03</span>
+        <h2>How many guests are we <em>lighting up?</em></h2>
+        <div class="guests">
+          <output>75<small>guests</small></output>
+          <input type="range" name="guest-count" min="10" max="300" step="5" value="75" aria-label="Estimated guest count">
+        </div>
+        <div class="match-nav">
+          <button type="button" class="btn" data-next>Next</button>
+          <button type="button" class="back" data-back>Back</button>
+        </div>
+      </div>
+
+      <!-- Step 4: experience + venue -->
+      <div class="match-step">
+        <span class="match-q">Question 04</span>
+        <h2>Which experience is calling, and <em>where?</em></h2>
+        <input type="hidden" name="experience">
+        <div class="chip-row" data-auto-advance="false" style="margin-bottom:1.8rem">
+          <button type="button" class="chip" data-value="Cigar Truck">The Truck</button>
+          <button type="button" class="chip" data-value="Cigar Bar">The Bar</button>
+          <button type="button" class="chip" data-value="Cigar Golf Cart">The Golf Cart</button>
+          <button type="button" class="chip" data-value="Not sure yet">Surprise us</button>
+        </div>
+        <div class="field">
+          <label for="venue">Venue &amp; city</label>
+          <input type="text" id="venue" name="venue" placeholder="e.g. The Don CeSar, St. Pete Beach" required>
+        </div>
+        <div class="match-nav">
+          <button type="button" class="btn" data-next>Next</button>
+          <button type="button" class="back" data-back>Back</button>
+        </div>
+      </div>
+
+      <!-- Step 5: contact -->
+      <div class="match-step">
+        <span class="match-q">Question 05</span>
+        <h2>Where do we send <em>your guide?</em></h2>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input type="text" id="name" name="name" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone (optional)</label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel">
+        </div>
+        <div class="field">
+          <label for="notes">Anything else we should know? (optional)</label>
+          <textarea id="notes" name="notes" rows="3" placeholder="Themes, timelines, surprises in the works..."></textarea>
+        </div>
+        <div class="match-nav">
+          <button type="submit" class="btn solid">See If We Match</button>
+          <button type="button" class="back" data-back>Back</button>
+        </div>
+      </div>
+
+      <!-- Step 6: reveal -->
+      <div class="match-step">
+        <div class="match-reveal">
+          <div class="match-words"><span class="w1">It's a</span> <span class="w2">match.</span></div>
+          <p><span class="spark">✦</span> Your services and pricing guide is on its way. Carlos or Hannah will reach out within one business day. <span class="spark">✦</span></p>
+          <a class="btn ghost" href="/gallery" style="margin-top:2rem">Browse the Gallery While You Wait</a>
+        </div>
+      </div>
+    </form>
+
+    <p style="color:var(--muted);font-size:.88rem;margin-top:2.5rem">Prefer to talk? <a href="mailto:hello@fireandashevents.com" style="color:var(--copper)">hello@fireandashevents.com</a> · DM <a href="https://www.instagram.com/fireandashcigartruck/" rel="noopener" target="_blank" style="color:var(--copper)">@fireandashcigartruck</a></p>
+  </div>
+</section>
+
+<nav class="app-nav" aria-label="Quick navigation">
+  <a href="/">Home</a>
+  <a href="/services">Services</a>
+  <a href="/gallery">Gallery</a>
+  <a href="/inquire" aria-current="page">Inquire</a>
+</nav>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>
