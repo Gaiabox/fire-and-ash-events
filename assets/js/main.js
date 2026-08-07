@@ -388,3 +388,35 @@ if (rotator && !reduced) {
     shots[ri].classList.add('on');
   }, 3800);
 }
+
+/* ── turf video: expand to full film ── */
+const turfExpand = document.querySelector('.turf-expand');
+if (turfExpand) {
+  const vlb = document.createElement('div');
+  vlb.className = 'vlb';
+  vlb.setAttribute('role', 'dialog');
+  vlb.setAttribute('aria-label', 'Video player');
+  vlb.innerHTML = '<div class="lb-veil"></div>'
+    + '<video src="/assets/video/yards-full.mp4" controls playsinline preload="none"></video>'
+    + '<button class="lb-close" aria-label="Close video">Close</button>';
+  document.body.appendChild(vlb);
+  const fullVideo = vlb.querySelector('video');
+  const loopVideo = turfExpand.querySelector('video');
+  const openV = () => {
+    vlb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    loopVideo.pause();
+    fullVideo.currentTime = 0;
+    fullVideo.play().catch(() => {});
+  };
+  const closeV = () => {
+    vlb.classList.remove('open');
+    document.body.style.overflow = '';
+    fullVideo.pause();
+    loopVideo.play().catch(() => {});
+  };
+  turfExpand.addEventListener('click', openV);
+  vlb.querySelector('.lb-close').addEventListener('click', closeV);
+  vlb.querySelector('.lb-veil').addEventListener('click', closeV);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && vlb.classList.contains('open')) closeV(); });
+}

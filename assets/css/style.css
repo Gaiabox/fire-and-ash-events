@@ -705,3 +705,21 @@ html{scrollbar-width:thin;scrollbar-color:var(--char-2) var(--ink)}
 .match-shell .ember{z-index:0}
 
 h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-height:1.4}
+
+/* ── turf video: click to expand ── */
+.turf-expand{display:block;position:relative;background:none;border:none;padding:0;width:100%;cursor:pointer}
+.turf-expand video{width:100%;height:auto;display:block;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.watch-hint{
+  position:absolute;left:50%;bottom:1.1rem;transform:translateX(-50%);
+  background:rgba(14,12,10,.72);backdrop-filter:blur(8px);color:var(--cream);
+  font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;
+  padding:.65rem 1.3rem;border-radius:100px;border:1px solid rgba(242,234,217,.25);
+  transition:background .3s,border-color .3s;white-space:nowrap;
+}
+.turf-expand:hover .watch-hint{background:var(--copper);color:var(--ink);border-color:var(--copper)}
+/* video lightbox */
+.vlb{position:fixed;inset:0;z-index:130;display:none;align-items:center;justify-content:center}
+.vlb.open{display:flex}
+.vlb .lb-veil{position:absolute;inset:0;background:rgba(14,12,10,.94);opacity:1}
+.vlb video{position:relative;z-index:2;max-height:88vh;max-width:92vw;box-shadow:0 30px 90px rgba(0,0,0,.7)}
+.vlb .lb-close{position:absolute;top:1.2rem;right:clamp(.4rem,3vw,2.5rem);z-index:3}
