@@ -289,8 +289,10 @@ section{position:relative;padding:clamp(4.5rem,9vw,8.5rem) 0}
 .light .btn:hover{background-position:0 0;color:var(--cream)}
 .light .btn.solid{background:var(--copper-deep);color:var(--cream)}
 .light .photo figcaption{color:#8a7d6c}
-.light .scorecard{background:#ece2cf;border-color:rgba(84,64,42,.2)}
+.light .scorecard{background:#f2e9d6;border-color:rgba(84,64,42,.2)}
 .light .scorecard .row{border-color:rgba(84,64,42,.18)}
+.light .scorecard .row:hover{background:rgba(150,105,58,.12)}
+.light .scorecard .row .par{color:#5d5346}
 .light .scorecard .amt{color:var(--copper-deep)}
 .light .faq-item{border-color:rgba(84,64,42,.22)}
 .light .faq-item .a{color:#6b6155}
@@ -334,11 +336,28 @@ section{position:relative;padding:clamp(4.5rem,9vw,8.5rem) 0}
 .step p{color:var(--muted);font-size:.96rem}
 
 .scorecard{border:1px solid var(--line);background:var(--char)}
-.scorecard .row{display:grid;grid-template-columns:1fr auto auto;gap:1.5rem;align-items:center;padding:1.5rem 2rem;border-bottom:1px solid var(--line)}
+.scorecard .row{
+  display:grid;grid-template-columns:minmax(12rem,1.2fr) 2fr auto;gap:2rem;align-items:center;
+  padding:1.9rem 2.2rem;border-bottom:1px solid var(--line);position:relative;overflow:hidden;
+  transition:background .35s,padding-left .35s var(--ease);
+}
+.scorecard .row::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:var(--copper);transform:scaleY(0);transform-origin:bottom;
+  transition:transform .35s var(--ease);
+}
+.scorecard .row:hover{background:rgba(192,138,78,.09);padding-left:2.9rem}
+.scorecard .row:hover::before{transform:scaleY(1)}
 .scorecard .row:last-child{border-bottom:none}
-.scorecard .row h3{font-size:1.3rem}
-.scorecard .row .par{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
-.scorecard .row .amt{font-family:"Fraunces",serif;font-style:italic;font-size:1.4rem;color:var(--champagne);font-feature-settings:'onum' 1}
+.scorecard .row h3{font-size:1.45rem;transition:color .3s}
+.scorecard .row:hover h3{color:var(--copper-deep)}
+.scorecard .row .par{font-size:.95rem;letter-spacing:.02em;text-transform:none;color:var(--muted);line-height:1.5}
+.scorecard .row .amt{
+  font-family:"Fraunces",serif;font-style:italic;font-size:clamp(1.5rem,2.2vw,2rem);
+  color:var(--champagne);font-feature-settings:'onum' 1;white-space:nowrap;justify-self:end;
+  transition:transform .35s var(--ease);
+}
+.scorecard .row:hover .amt{transform:scale(1.07)}
 
 /* ── faq ── */
 .faq-item{border-bottom:1px solid var(--line)}
@@ -354,8 +373,8 @@ section{position:relative;padding:clamp(4.5rem,9vw,8.5rem) 0}
 .quote cite{display:block;margin-top:1.6rem;font-style:normal;font-size:.92rem;letter-spacing:.22em;text-transform:uppercase;color:var(--champagne);font-weight:500}
 
 /* ── footer ── */
-footer{background:var(--char);border-top:1px solid var(--line);padding:clamp(3.5rem,7vw,5rem) 0 6.5rem}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+footer{background:var(--char);border-top:1px solid var(--line);padding:clamp(3.5rem,7vw,5rem) 0 2.2rem}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.5fr;gap:3rem;margin-bottom:3rem}
 footer h4{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:1.1rem;font-weight:500}
 footer ul{list-style:none}
 footer li{margin-bottom:.55rem}
@@ -579,3 +598,61 @@ html{scrollbar-width:thin;scrollbar-color:var(--char-2) var(--ink)}
   .band-split{grid-template-columns:1fr}
   .rotator{order:2;width:100%;height:38vh}
 }
+
+/* ── inline reserve capture (footer) ── */
+.reserve-inline{display:flex;max-width:26rem}
+.reserve-inline input[type=email]{border-right:none;border-radius:2px 0 0 2px;background:var(--ink);padding:.85rem 1rem;font-size:.95rem}
+.reserve-inline .btn{border-radius:0 2px 2px 0;white-space:nowrap;padding:.85rem 1.4rem}
+@media(max-width:640px){
+  .reserve-inline{flex-direction:column;gap:.8rem}
+  .reserve-inline input[type=email]{border-right:1px solid var(--line);border-radius:2px}
+}
+
+/* ── sliced photo panel (date is filling) ── */
+.filling .split{align-items:center}
+.slats{display:flex;gap:12px;height:min(48vh,470px)}
+.slats i{
+  flex:1;display:block;
+  background-image:url(/assets/img/cigar-truck-wedding-couple.webp);
+  background-size:420% auto;background-repeat:no-repeat;
+  box-shadow:0 20px 50px rgba(0,0,0,.4);
+}
+.slats i:nth-child(odd){margin-top:2.4rem}
+.slats i:nth-child(even){margin-bottom:2.4rem}
+@media(max-width:920px){.slats{height:34vh;margin-top:1rem}}
+
+@media(max-width:920px){.footer-grid{grid-template-columns:1fr 1fr}.footer-reserve{grid-column:1/-1}}
+@media(max-width:560px){.footer-grid{grid-template-columns:1fr}}
+
+.footer-reserve h4{
+  font-family:"Fraunces",serif;font-size:1.35rem;color:var(--copper);
+  text-transform:none;letter-spacing:.01em;font-weight:400;margin-bottom:.6rem;line-height:1.25;
+}
+.footer-reserve h4 .amp{color:var(--cream);font-style:italic}
+.footer-reserve h4 small{display:block;font-size:1.35rem;color:var(--cream);font-weight:400}
+
+/* ── services closer: compact sign-off with photo fan ── */
+.closer{padding:clamp(3.5rem,7vw,5.5rem) 0}
+.closer .split{align-items:center}
+.fan{position:relative;height:min(40vh,400px);display:flex;align-items:center;justify-content:center}
+.fan img{
+  position:absolute;height:min(34vh,330px);width:auto;
+  border:8px solid #fbf7ee;box-shadow:0 18px 44px rgba(0,0,0,.45);
+  transition:transform .5s var(--ease);
+}
+.fan img:nth-child(1){transform:rotate(-7deg) translateX(-11.5rem) translateY(.6rem)}
+.fan img:nth-child(2){transform:rotate(1.5deg);z-index:2}
+.fan img:nth-child(3){transform:rotate(7deg) translateX(11.5rem) translateY(.6rem)}
+.fan:hover img:nth-child(1){transform:rotate(-9deg) translateX(-13rem) translateY(.6rem)}
+.fan:hover img:nth-child(2){transform:rotate(0deg) scale(1.05)}
+.fan:hover img:nth-child(3){transform:rotate(9deg) translateX(13rem) translateY(.6rem)}
+@media(max-width:920px){
+  .fan{height:34vh;margin-top:1.5rem}
+  .fan img{height:24vh}
+  .fan img:nth-child(1){transform:rotate(-7deg) translateX(-6rem)}
+  .fan img:nth-child(3){transform:rotate(7deg) translateX(6rem)}
+}
+
+/* solo closer photo */
+.fan.solo img{position:static;transform:rotate(1.5deg);height:min(38vh,380px)}
+.fan.solo:hover img{transform:rotate(0deg) scale(1.03)}

@@ -46,8 +46,7 @@
     <a href="/services"><small>02</small>Services</a>
     <a href="/about"><small>03</small>About</a>
     <a href="/gallery"><small>04</small>Gallery</a>
-    <a href="/inquire"><small>05</small>The Perfect Match</a>
-    <a href="/reserve"><small>06</small>Fire &amp; Ash Reserve</a>
+    <a href="/inquire"><small>05</small>Inquire</a>
   </nav>
   <div class="menu-foot">Florida based · Serving events nationwide · <a href="mailto:hello@fireandashevents.com">hello@fireandashevents.com</a></div>
 </div>
@@ -110,16 +109,17 @@
   </div>
 </section>
 
-<section class="band">
-  <div class="wrap">
-    <h2 data-reveal style="font-size:var(--t-display);max-width:18ch">Picture this at <em>your event</em>.</h2>
-    <p data-reveal class="lead" style="margin:1.5rem 0 2.5rem">Two minutes and your date is on our radar.</p>
-    <a class="btn solid" href="/inquire" data-reveal>Find Your Match</a>
+<section class="closer band">
+  <div class="wrap split">
+    <div>
+      <h2 data-reveal style="font-size:clamp(2rem,4.5vw,3.6rem)">Light up <em>the night.</em></h2>
+      <p data-reveal class="lead" style="margin:1.2rem 0 2rem;max-width:40ch">Picture this at your event. Two minutes and your date is on our radar.</p>
+      <a class="btn solid" href="/inquire" data-reveal>Inquire</a>
+    </div>
+    <figure class="fan solo" aria-hidden="true">
+      <img src="/assets/img/couple-cigar-truck-kiss.webp" alt="" loading="lazy">
+    </figure>
   </div>
-</section>
-
-<section class="signoff">
-  <div class="wrap"><p data-reveal>Light up <em>the night.</em></p></div>
 </section>
 
 <footer>
@@ -135,8 +135,7 @@
           <li><a href="/services">Services &amp; Pricing</a></li>
           <li><a href="/about">About Carlos &amp; Hannah</a></li>
           <li><a href="/gallery">Gallery</a></li>
-          <li><a href="/inquire">The Perfect Match</a></li>
-          <li><a href="/reserve">Fire &amp; Ash Reserve</a></li>
+          <li><a href="/inquire">Inquire</a></li>
         </ul>
       </div>
       <div>
@@ -146,6 +145,16 @@
           <li><a href="https://www.instagram.com/fireandashcigartruck/" rel="noopener" target="_blank">@fireandashcigartruck</a></li>
         </ul>
       </div>
+      <div class="footer-reserve">
+        <h4>Fire <span class="amp">&amp;</span> Ash Reserve<small>Coming Soon</small></h4>
+        <p style="color:var(--muted);font-size:.9rem;margin-bottom:1rem">Small-batch cigars and accessories. Be first in line.</p>
+        <form class="reserve-inline" name="reserve-waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="reserve-waitlist">
+          <p style="display:none"><label>Skip this field: <input name="bot-field"></label></p>
+          <input type="email" name="email" placeholder="your@email.com" aria-label="Email address" required>
+          <button type="submit" class="btn solid">Join</button>
+        </form>
+      </div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 Fire &amp; Ash Events, LLC. All rights reserved.</span>
@@ -154,7 +163,7 @@
   </div>
 </footer>
 
-<a class="dock-cta" href="/inquire">Find Your Match</a>
+<a class="dock-cta" href="/inquire">Inquire</a>
 
 <nav class="app-nav" aria-label="Quick navigation">
   <a href="/">Home</a>

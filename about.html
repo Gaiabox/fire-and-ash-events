@@ -62,8 +62,7 @@
     <a href="/services"><small>02</small>Services</a>
     <a href="/about"><small>03</small>About</a>
     <a href="/gallery"><small>04</small>Gallery</a>
-    <a href="/inquire"><small>05</small>The Perfect Match</a>
-    <a href="/reserve"><small>06</small>Fire &amp; Ash Reserve</a>
+    <a href="/inquire"><small>05</small>Inquire</a>
   </nav>
   <div class="menu-foot">Florida based · Serving events nationwide · <a href="mailto:hello@fireandashevents.com">hello@fireandashevents.com</a></div>
 </div>
@@ -107,10 +106,16 @@
 </section>
 
 <section class="light" style="background:#ece2cf">
-  <div class="wrap quote">
-    <span class="label" data-reveal>Why We Do It</span>
-    <blockquote data-reveal>“The best experiences are built around <em>connection</em>. Every build, every event, every interaction exists to make people feel welcomed, connected, and inspired.”</blockquote>
-    <cite data-reveal>Carlos &amp; Hannah Lopez</cite>
+  <div class="wrap split">
+    <div class="quote">
+      <span class="label" data-reveal>Why We Do It</span>
+      <blockquote data-reveal>“The best experiences are built around <em>connection</em>. Every build, every event, every interaction exists to make people feel welcomed, connected, and inspired.”</blockquote>
+      <cite data-reveal>Carlos &amp; Hannah Lopez</cite>
+    </div>
+    <figure class="photo keyline" data-reveal>
+      <img src="/assets/img/carlos-hannah-at-work.webp" alt="Carlos and Hannah Lopez in Fire and Ash shirts at the cigar truck window" loading="lazy" width="1600" height="1203">
+      <figcaption>The two behind it all</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -134,7 +139,6 @@
   <div class="wrap">
     <span class="label" data-reveal>At Work</span>
     <div class="masonry" data-stagger style="margin-top:1.5rem">
-      <figure><img src="/assets/img/carlos-hannah-at-work.webp" alt="Carlos and Hannah Lopez in Fire and Ash shirts at the cigar truck window" loading="lazy" width="1600" height="1203"><figcaption>The two behind it all</figcaption></figure>
       <figure><img src="/assets/img/cigar-cart-owner.webp" alt="Carlos Lopez standing proudly beside the cigar golf cart" loading="lazy" width="1290" height="1600"><figcaption>Carlos with the original</figcaption></figure>
       <figure><img src="/assets/img/branded-cigar-humidor-box.webp" alt="Fire and Ash branded humidor box with cigars and custom matchboxes" loading="lazy" width="1066" height="1600"><figcaption>The details matter</figcaption></figure>
       <figure><img src="/assets/img/vintage-cigar-truck-garden.webp" alt="The vintage Fire and Ash cigar truck styled in a garden venue" loading="lazy" width="1600" height="1064"><figcaption>The truck that started it</figcaption></figure>
@@ -145,16 +149,17 @@
   </div>
 </section>
 
-<section class="band">
-  <div class="wrap">
-    <h2 data-reveal style="font-size:var(--t-display);max-width:18ch">Now, about <em>your event</em>.</h2>
-    <p data-reveal class="lead" style="margin:1.5rem 0 2.5rem">Every inquiry comes straight to Carlos and Hannah. Tell us what you're celebrating.</p>
-    <a class="btn solid" href="/inquire" data-reveal>Find Your Match</a>
+<section class="closer band">
+  <div class="wrap split">
+    <div>
+      <h2 data-reveal style="font-size:clamp(2rem,4.5vw,3.6rem)">Light up <em>the night.</em></h2>
+      <p data-reveal class="lead" style="margin:1.2rem 0 2rem;max-width:40ch">Every inquiry comes straight to Carlos and Hannah. Tell us what you're celebrating and we'll reply within one business day.</p>
+      <a class="btn solid" href="/inquire" data-reveal>Inquire</a>
+    </div>
+    <figure class="fan solo" aria-hidden="true">
+      <img src="/assets/img/guest-seated-cigar-cart.webp" alt="" loading="lazy">
+    </figure>
   </div>
-</section>
-
-<section class="signoff">
-  <div class="wrap"><p data-reveal>Light up <em>the night.</em></p></div>
 </section>
 
 <footer>
@@ -170,8 +175,7 @@
           <li><a href="/services">Services &amp; Pricing</a></li>
           <li><a href="/about">About Carlos &amp; Hannah</a></li>
           <li><a href="/gallery">Gallery</a></li>
-          <li><a href="/inquire">The Perfect Match</a></li>
-          <li><a href="/reserve">Fire &amp; Ash Reserve</a></li>
+          <li><a href="/inquire">Inquire</a></li>
         </ul>
       </div>
       <div>
@@ -181,6 +185,16 @@
           <li><a href="https://www.instagram.com/fireandashcigartruck/" rel="noopener" target="_blank">@fireandashcigartruck</a></li>
         </ul>
       </div>
+      <div class="footer-reserve">
+        <h4>Fire <span class="amp">&amp;</span> Ash Reserve<small>Coming Soon</small></h4>
+        <p style="color:var(--muted);font-size:.9rem;margin-bottom:1rem">Small-batch cigars and accessories. Be first in line.</p>
+        <form class="reserve-inline" name="reserve-waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="reserve-waitlist">
+          <p style="display:none"><label>Skip this field: <input name="bot-field"></label></p>
+          <input type="email" name="email" placeholder="your@email.com" aria-label="Email address" required>
+          <button type="submit" class="btn solid">Join</button>
+        </form>
+      </div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 Fire &amp; Ash Events, LLC. All rights reserved.</span>
@@ -189,7 +203,7 @@
   </div>
 </footer>
 
-<a class="dock-cta" href="/inquire">Find Your Match</a>
+<a class="dock-cta" href="/inquire">Inquire</a>
 
 <nav class="app-nav" aria-label="Quick navigation">
   <a href="/">Home</a>

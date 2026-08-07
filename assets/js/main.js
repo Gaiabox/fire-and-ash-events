@@ -239,8 +239,8 @@ if (matchForm) {
 }
 
 /* ── Reserve waitlist ── */
-const reserveForm = document.querySelector('#reserve-form');
-if (reserveForm) {
+const reserveForms = [...document.querySelectorAll('form[name="reserve-waitlist"]')];
+reserveForms.forEach((reserveForm) => {
   const shell = document.querySelector('.reserve-shell');
   if (shell && !reduced) {
     for (let i = 0; i < 14; i++) {
@@ -256,10 +256,10 @@ if (reserveForm) {
     const data = new FormData(reserveForm);
     try {
       await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data).toString() });
-      reserveForm.innerHTML = '<p style="font-family:Fraunces,serif;font-style:italic;font-size:1.4rem;color:var(--champagne)">You’re on the list. Watch your inbox. <span class="spark">✦</span></p>';
+      reserveForm.innerHTML = '<p style="font-family:Fraunces,serif;font-style:italic;font-size:1.3rem;color:var(--champagne)">You’re on the list. Watch your inbox. <span class="spark">✦</span></p>';
     } catch {}
   });
-}
+});
 
 /* ── Gallery lightbox: FLIP zoom from grid, PREV/CLOSE/NEXT ── */
 const galleryFigs = [...document.querySelectorAll('.masonry figure')].filter(f => f.querySelector('img'));
