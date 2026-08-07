@@ -238,6 +238,18 @@ if (matchForm) {
   });
 }
 
+/* ── ambient embers on the inquire page ── */
+const matchShell = document.querySelector('.match-shell');
+if (matchShell && !reduced) {
+  for (let i = 0; i < 12; i++) {
+    const e = document.createElement('i');
+    e.className = 'ember';
+    const sz = 2 + (i % 4);
+    e.style.cssText = `left:${(i * 8.6) % 100}%;width:${sz}px;height:${sz}px;animation-duration:${7 + (i % 5) * 2}s;animation-delay:${i * 1.1}s;--sway:${(i % 2 ? 1 : -1) * (18 + i * 5)}px`;
+    matchShell.appendChild(e);
+  }
+}
+
 /* ── Reserve waitlist ── */
 const reserveForms = [...document.querySelectorAll('form[name="reserve-waitlist"]')];
 reserveForms.forEach((reserveForm) => {

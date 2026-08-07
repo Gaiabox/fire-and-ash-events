@@ -656,3 +656,64 @@ html{scrollbar-width:thin;scrollbar-color:var(--char-2) var(--ink)}
 /* solo closer photo */
 .fan.solo img{position:static;transform:rotate(1.5deg);height:min(38vh,380px)}
 .fan.solo:hover img{transform:rotate(0deg) scale(1.03)}
+
+/* ── event sign-in sheet (inquire) ── */
+.sheet{
+  background:linear-gradient(175deg,#f6efe0,#efe5cf);
+  color:var(--ink);border-radius:4px;
+  padding:clamp(1.8rem,4vw,3.2rem) clamp(1.4rem,4vw,3.2rem);
+  box-shadow:0 34px 90px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.6);
+  max-width:56rem;margin-top:1.4rem;
+}
+.sheet-head{
+  display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;
+  border-bottom:1px solid rgba(84,64,42,.25);padding-bottom:1.1rem;margin-bottom:1.4rem;
+}
+.sheet-head span{font-family:"Fraunces",serif;font-size:1.15rem}
+.sheet-head span em{color:var(--copper-deep);font-style:italic}
+.sheet-head small{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:#8a7d6c}
+.sheet .match-progress{margin-bottom:2.2rem}
+.sheet .match-progress i{background:rgba(84,64,42,.18)}
+.sheet .match-progress i::after{background:var(--copper-deep)}
+.sheet .match-q{color:var(--copper-deep)}
+.sheet h2{color:var(--ink)}
+.sheet h2 em{color:var(--copper-deep)}
+.sheet .chip{border-color:rgba(84,64,42,.35);color:var(--ink);background:rgba(255,255,255,.35)}
+.sheet .chip:hover{border-color:var(--copper-deep)}
+.sheet .chip.on{background:var(--copper-deep);border-color:var(--copper-deep);color:var(--cream)}
+.sheet label{color:#6b6155}
+.sheet input[type=text],.sheet input[type=email],.sheet input[type=tel],.sheet input[type=date],.sheet textarea{
+  background:#fbf7ee;border:1px solid rgba(84,64,42,.3);color:var(--ink);
+}
+.sheet input:focus,.sheet textarea:focus{border-color:var(--copper-deep)}
+.sheet ::placeholder{color:#a09582}
+.sheet .btn{color:var(--ink);border-color:var(--copper-deep);background:linear-gradient(to right,var(--copper-deep) 50%,transparent 50%) 100% 0/200% 100%}
+.sheet .btn:hover{background-position:0 0;color:var(--cream)}
+.sheet .btn.solid{background:linear-gradient(115deg,var(--copper-deep) 0%,var(--copper) 50%,var(--copper-deep) 100%);color:var(--cream)}
+.sheet .back{color:#8a7d6c}
+.sheet .back:hover{color:var(--ink)}
+.sheet .guests output{color:var(--copper-deep)}
+.sheet .guests output small{color:#8a7d6c}
+.sheet input[type=range]{background:linear-gradient(to right,var(--copper-deep) var(--fill,20%),rgba(84,64,42,.25) var(--fill,20%))}
+.sheet input[type=range]::-webkit-slider-thumb{background:var(--copper-deep);border-color:#f6efe0;box-shadow:0 0 0 1px var(--copper-deep)}
+.sheet .match-reveal p{color:#6b6155}
+.sheet .match-words .w2{color:var(--copper-deep)}
+
+/* ── inquire page depth: centered sheet, stacked papers, glow, embers ── */
+.match-shell{position:relative;overflow:hidden}
+.match-glow{
+  position:absolute;width:60vmax;height:60vmax;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(192,138,78,.14),transparent 62%);
+  top:-24vmax;right:-18vmax;filter:blur(60px);
+}
+.match-glow.two{top:auto;right:auto;bottom:-28vmax;left:-20vmax;background:radial-gradient(circle,rgba(36,64,46,.35),transparent 60%)}
+.sheet{position:relative;margin-left:auto;margin-right:auto}
+.sheet::before,.sheet::after{
+  content:"";position:absolute;inset:0;border-radius:4px;z-index:-1;
+  background:#e6dbc2;box-shadow:0 18px 50px rgba(0,0,0,.35);
+}
+.sheet::before{transform:rotate(-1.6deg) translateY(9px)}
+.sheet::after{transform:rotate(1.1deg) translateY(6px);background:#ded2b6}
+.match-shell .ember{z-index:0}
+
+h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-height:1.4}
