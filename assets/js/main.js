@@ -25,15 +25,6 @@ if (menuBtn) {
     a.addEventListener('click', () => setMenu(false)));
 }
 
-// Responsive hero video source
-const heroVideo = document.querySelector('[data-hero-video]');
-if (heroVideo) {
-  const portrait = window.matchMedia('(max-width: 700px)').matches;
-  const src = portrait ? heroVideo.dataset.srcPortrait : heroVideo.dataset.srcLandscape;
-  const poster = portrait ? heroVideo.dataset.posterPortrait : heroVideo.dataset.posterLandscape;
-  if (src) { heroVideo.src = src; if (poster) heroVideo.poster = poster; heroVideo.load(); heroVideo.play().catch(() => {}); }
-}
-
 // Scroll reveals via IntersectionObserver + CSS transitions
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealables = [
@@ -71,7 +62,7 @@ if ('IntersectionObserver' in window && !reduced) {
 
 /* ── Recent Nights pinned rail: scroll drives horizontal travel ── */
 const nights = document.querySelector('.nights');
-if (nights && window.matchMedia('(min-width: 921px)').matches && !reduced) {
+if (nights && !reduced) {
   const track = nights.querySelector('.nights-track');
   let travel = 0, target = 0, current = 0, raf = null;
 
@@ -103,7 +94,7 @@ if (nights && window.matchMedia('(min-width: 921px)').matches && !reduced) {
 
 /* ── Experience showcase: pinned linear slide (editorial) ── */
 const exp = document.querySelector('.exp');
-if (exp && window.matchMedia('(min-width: 921px)').matches && !reduced) {
+if (exp && !reduced) {
   const stage = exp.querySelector('.exp-stage');
   let travel = 0, target = 0, current = -1, raf = null;
   const measure = () => {

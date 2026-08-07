@@ -196,15 +196,8 @@ section{position:relative;padding:clamp(4.5rem,9vw,8.5rem) 0}
 .night-more::after{display:none}
 .night-more:hover{border-color:var(--copper);background:var(--char-2)}
 @media(max-width:920px){
-  .nights{padding:clamp(4.5rem,9vw,8.5rem) 0}
-  .nights-pin{position:static;height:auto;overflow:visible}
-  .nights-track{
-    width:auto;overflow-x:auto;scroll-snap-type:x mandatory;
-    padding:0 clamp(1.4rem,4.5vw,4.5rem) 1rem;scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;
-  }
-  .nights-track::-webkit-scrollbar{display:none}
-  .night-card{scroll-snap-align:center;height:min(52vh,460px)}
+  .night-card{height:min(44vh,420px)}
+  .night-card figcaption span{font-size:1.15rem}
 }
 
 /* ── experience showcase: editorial linear slide (pinned) ── */
@@ -248,22 +241,14 @@ section{position:relative;padding:clamp(4.5rem,9vw,8.5rem) 0}
 }
 .exp-outro{flex:0 0 min(30vw,420px);align-self:center;text-align:left}
 .exp-outro p{font-family:"Fraunces",serif;font-size:clamp(1.3rem,2vw,1.7rem);line-height:1.4;margin-bottom:1.8rem;color:var(--ink)}
-@media(min-width:921px){
-  .exp{position:relative}
-  .exp-pin{position:sticky;top:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;box-sizing:border-box}
-}
+.exp{position:relative}
+.exp-pin{position:sticky;top:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;box-sizing:border-box}
 @media(max-width:920px){
-  .exp-stage{
-    width:auto;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;padding-bottom:2rem;
-  }
-  .exp-stage::-webkit-scrollbar{display:none}
-  .exp-intro,.exp-outro{flex:0 0 78vw;scroll-snap-align:center}
-  .exp-item{scroll-snap-align:center;flex:0 0 auto;max-width:86vw}
-  .exp-item>img{height:auto;width:86vw;max-height:none}
-  .exp-item:nth-child(3)>img{width:64vw}
-  .exp-meta{max-width:86vw}
-  .exp-side{align-items:flex-start}
+  .exp-intro{flex:0 0 76vw}
+  .exp-outro{flex:0 0 70vw}
+  .exp-item>img{height:min(38vh,380px)}
+  .exp-meta{flex-direction:column;gap:.8rem;min-width:min(70vw,320px);max-width:80vw}
+  .exp-side{flex-direction:row;align-items:baseline;gap:1.4rem;align-self:flex-start}
 }
 
 /* ── split ── */
