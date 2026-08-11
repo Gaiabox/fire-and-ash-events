@@ -728,3 +728,6 @@ h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-he
 .vlb .lb-veil{position:absolute;inset:0;background:rgba(14,12,10,.94);opacity:1}
 .vlb video{position:relative;z-index:2;max-height:88vh;max-width:92vw;box-shadow:0 30px 90px rgba(0,0,0,.7)}
 .vlb .lb-close{position:absolute;top:1.2rem;right:clamp(.4rem,3vw,2.5rem);z-index:3}
+
+.form-success{font-family:"Playfair Display",serif;font-style:italic;font-size:1.3rem;color:var(--champagne)}
+.light .form-success,.sheet .form-success{color:var(--copper-deep)}

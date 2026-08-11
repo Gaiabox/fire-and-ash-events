@@ -157,8 +157,14 @@ if (turf) {
       setTimeout(unlockTurf, 5400); // hard failsafe: never trap the scroll
     };
     const turfIO = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting && !turfDone) { lockTurf(); turfIO.disconnect(); } });
-    }, { threshold: 0.55 });
+      entries.forEach((e) => {
+        if (turfDone) return;
+        // trigger when the section fills most of the viewport (or most of itself, if small)
+        const vp = window.innerHeight || document.documentElement.clientHeight || 800;
+        const coverage = e.intersectionRect.height / Math.max(1, Math.min(e.boundingClientRect.height, vp));
+        if (e.isIntersecting && coverage >= 0.6) { lockTurf(); turfIO.disconnect(); }
+      });
+    }, { threshold: [0.2, 0.35, 0.5, 0.65, 0.8] });
     turfIO.observe(turf);
   }
 }
@@ -259,7 +265,7 @@ reserveForms.forEach((reserveForm) => {
     const data = new FormData(reserveForm);
     try {
       await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data).toString() });
-      reserveForm.innerHTML = '<p style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.3rem;color:var(--champagne)">You’re on the list. Watch your inbox. <span class="spark">✦</span></p>';
+      reserveForm.innerHTML = '<p class="form-success">You’re on the list. Watch your inbox. <span class="spark">✦</span></p>';
     } catch {}
   });
 });
