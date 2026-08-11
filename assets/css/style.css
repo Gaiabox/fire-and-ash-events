@@ -470,7 +470,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .turf-grass.grow{transition:clip-path 4.8s cubic-bezier(.3,.1,.3,1);clip-path:inset(0 0 0 0)}
 .turf.done .turf-grass{clip-path:inset(0 0 0 0)}
 .turf-stage{
-  position:relative;display:grid;grid-template-columns:1fr auto;
+  position:relative;z-index:2;display:grid;grid-template-columns:1fr auto;
   grid-template-rows:auto auto;column-gap:clamp(2rem,5vw,5rem);row-gap:1.5rem;
   align-items:start;
 }
@@ -482,9 +482,10 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   text-shadow:0 2px 26px rgba(10,14,10,.65);
 }
 .turf-big em{color:var(--copper);font-style:italic}
-.turf-quote{grid-column:1;grid-row:2;max-width:36ch;padding-top:.5rem}
+.turf-quote{grid-column:1;grid-row:2;max-width:36ch;padding-top:.5rem;position:relative;z-index:4}
 .turf-quote blockquote{font-size:clamp(1.05rem,1.6vw,1.35rem);max-width:30ch}
-.turf-video{grid-column:2;grid-row:1/3;margin:0 0 0 clamp(-11rem,-9vw,-2rem);justify-self:end;z-index:1;align-self:center}
+.turf-video{grid-column:2;grid-row:1/3;margin:0;justify-self:end;z-index:1;align-self:center}
+@media(min-width:1280px){.turf-video{margin-left:clamp(-11rem,-9vw,-2rem)}}
 .player-frame{display:block;position:relative;border:1px solid rgba(192,138,78,.5);padding:9px}
 .player-frame video{height:min(62vh,600px);width:auto;display:block}
 .player-tag{
