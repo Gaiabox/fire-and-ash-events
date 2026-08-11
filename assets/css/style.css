@@ -747,8 +747,6 @@ html{scrollbar-width:thin;scrollbar-color:var(--char-2) var(--ink)}
 h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-height:1.4}
 
 /* ── turf video: click to expand ── */
-.turf-expand{display:block;position:relative;background:none;border:none;padding:0;width:100%;cursor:pointer}
-.turf-expand video{width:100%;height:auto;display:block;box-shadow:0 24px 60px rgba(0,0,0,.5)}
 
 /* video lightbox */
 .vlb{position:fixed;inset:0;z-index:130;display:none;align-items:center;justify-content:center}
