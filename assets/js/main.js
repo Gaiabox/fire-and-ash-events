@@ -259,7 +259,7 @@ reserveForms.forEach((reserveForm) => {
     const data = new FormData(reserveForm);
     try {
       await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data).toString() });
-      reserveForm.innerHTML = '<p style="font-family:Fraunces,serif;font-style:italic;font-size:1.3rem;color:var(--champagne)">You’re on the list. Watch your inbox. <span class="spark">✦</span></p>';
+      reserveForm.innerHTML = '<p style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.3rem;color:var(--champagne)">You’re on the list. Watch your inbox. <span class="spark">✦</span></p>';
     } catch {}
   });
 });
