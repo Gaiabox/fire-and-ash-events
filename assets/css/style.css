@@ -758,3 +758,23 @@ h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-he
 
 .form-success{font-family:"Playfair Display",serif;font-style:italic;font-size:1.3rem;color:var(--champagne)}
 .light .form-success,.sheet .form-success{color:var(--copper-deep)}
+
+/* ── founders: espresso leather band ── */
+.founders{
+  position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#2b211775 0%,#241b1275 45%,#1c150e75 100%),
+             linear-gradient(160deg,#2b2117,#1c150e);
+}
+.founders::before{
+  content:"";position:absolute;left:-8%;top:8%;width:56vmin;height:56vmin;border-radius:50%;
+  background:radial-gradient(circle,rgba(214,150,80,.14),transparent 62%);
+  filter:blur(50px);pointer-events:none;
+}
+.founders .wrap{position:relative;z-index:2}
+.founders-ghost{
+  position:absolute;right:-2%;bottom:2%;z-index:1;pointer-events:none;
+  font-family:"Playfair Display",serif;font-size:clamp(9rem,22vw,20rem);line-height:1;
+  color:rgba(242,234,217,.045);white-space:nowrap;letter-spacing:-.02em;
+}
+.founders-ghost em{font-style:italic;color:rgba(192,138,78,.07)}
+.founders .keyline::before{border-color:rgba(192,138,78,.6)}
