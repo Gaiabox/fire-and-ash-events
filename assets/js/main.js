@@ -248,7 +248,7 @@ if (matchShell && !reduced) {
 }
 
 /* ── Reserve waitlist ── */
-const reserveForms = [...document.querySelectorAll('form[name="reserve-waitlist"]')];
+const reserveForms = [...document.querySelectorAll('form[name="stay-in-the-know"]')];
 reserveForms.forEach((reserveForm) => {
   const shell = document.querySelector('.reserve-shell');
   if (shell && !reduced) {
