@@ -421,6 +421,10 @@ if (turfExpand) {
     fullVideo.pause();
     loopVideo.play().catch(() => {});
   };
+  const progLine = document.querySelector('.turf-video .progress i');
+  if (progLine) loopVideo.addEventListener('timeupdate', () => {
+    if (loopVideo.duration) progLine.style.width = (loopVideo.currentTime / loopVideo.duration * 100) + '%';
+  });
   turfExpand.addEventListener('click', openV);
   vlb.querySelector('.lb-close').addEventListener('click', closeV);
   vlb.querySelector('.lb-veil').addEventListener('click', closeV);
