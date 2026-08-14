@@ -979,3 +979,29 @@ h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-he
 .vthumb:hover{opacity:.85}
 .vthumb.on{opacity:1;border-color:var(--copper);transform:scale(1.06)}
 @media(max-width:700px){.vthumb img{height:52px}}
+
+/* founders drift: photos slowly cross the bottom of the story */
+.drift{overflow:hidden;padding:4.5rem 0 5rem;cursor:grab}
+.drift.dragging{cursor:grabbing}
+.drift-track{
+  display:flex;align-items:center;gap:clamp(1.4rem,3vw,3rem);
+  width:max-content;will-change:transform;touch-action:pan-y;
+}
+.drift figure{margin:0;flex:0 0 auto;user-select:none;-webkit-user-select:none}
+.drift img{
+  width:auto;display:block;pointer-events:none;
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease);
+  box-shadow:0 18px 44px rgba(0,0,0,.45);
+}
+.drift .d-tall img{height:clamp(240px,34vh,380px)}
+.drift .d-mid img{height:clamp(200px,28vh,320px)}
+.drift .d-low img{height:clamp(160px,23vh,260px)}
+.drift .up{transform:translateY(-1.4rem)}
+.drift .dn{transform:translateY(1.4rem)}
+.drift figure.pressed img,.drift figure:hover img{transform:scale(1.045) rotate(.6deg)}
+.drift figure:nth-child(even).pressed img,.drift figure:nth-child(even):hover img{transform:scale(1.045) rotate(-.6deg)}
+@media(max-width:700px){
+  .drift{padding:3rem 0 3.5rem}
+  .drift .up{transform:translateY(-.8rem)}
+  .drift .dn{transform:translateY(.8rem)}
+}

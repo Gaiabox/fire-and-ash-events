@@ -604,3 +604,45 @@ if (vstage) {
   window.addEventListener('load', render);
   render();
 }
+
+/* ═══ founders drift: slow marquee, drag to steer, press to feel it ═══ */
+const drift = document.querySelector('.drift');
+if (drift) {
+  const track = drift.querySelector('.drift-track');
+  track.innerHTML += track.innerHTML; // second copy for a seamless loop
+  [...track.querySelectorAll('img')].forEach(img => { img.loading = 'eager'; img.decoding = 'async'; });
+  const AUTO = reduced ? 0 : 0.45;
+  let x = 0, vel = 0, dragging = false, lastX = 0, movedD = 0, running = false, rafD = null;
+  const step = () => {
+    const half = track.scrollWidth / 2;
+    if (!half) { rafD = requestAnimationFrame(step); return; }
+    if (!dragging) { x += AUTO + vel; vel *= 0.94; if (Math.abs(vel) < 0.01) vel = 0; }
+    x = ((x % half) + half) % half;
+    track.style.transform = `translate3d(${-x}px,0,0)`;
+    if (running) rafD = requestAnimationFrame(step);
+  };
+  new IntersectionObserver((es) => {
+    es.forEach((en) => {
+      if (en.isIntersecting && !running) { running = true; rafD = requestAnimationFrame(step); }
+      else if (!en.isIntersecting && running) { running = false; if (rafD) cancelAnimationFrame(rafD); }
+    });
+  }).observe(drift);
+  drift.addEventListener('pointerdown', (e) => {
+    dragging = true; movedD = 0; lastX = e.clientX; vel = 0;
+    drift.classList.add('dragging');
+    const fig = e.target.closest('figure');
+    if (fig) { fig.classList.add('pressed'); setTimeout(() => fig.classList.remove('pressed'), 600); }
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX; lastX = e.clientX;
+    movedD += Math.abs(dx);
+    x -= dx; vel = -dx * 0.35;
+    const half = track.scrollWidth / 2;
+    if (half) { x = ((x % half) + half) % half; track.style.transform = `translate3d(${-x}px,0,0)`; }
+  }, { passive: true });
+  window.addEventListener('pointerup', () => {
+    if (!dragging) return;
+    dragging = false; drift.classList.remove('dragging');
+  });
+}
