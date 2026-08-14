@@ -888,3 +888,8 @@ h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-he
   .vstage .vtile video{height:44vh}
   .vstage .vtile.wide video{height:32vh}
 }
+
+/* WebGL film wall */
+.film-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.film-gl .vstage .vtile{visibility:hidden;pointer-events:none;position:absolute;left:50%;top:50%}
+.film-gl .vstage-scene{perspective:none}

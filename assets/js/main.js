@@ -430,7 +430,7 @@ if (scrapFigs.length) {
 
 /* ═══ curved film carousel: slider pulls films through a 3D arc ═══ */
 const vstage = document.querySelector('.vstage');
-if (vstage) {
+if (vstage && !document.documentElement.classList.contains('film-gl')) {
   const scene = vstage.querySelector('.vstage-scene');
   const scrub = vstage.querySelector('.vscrub');
   const thumb = vstage.querySelector('.vscrub-thumb');
