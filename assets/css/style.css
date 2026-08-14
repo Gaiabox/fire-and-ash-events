@@ -778,3 +778,7 @@ h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-he
 }
 .founders-ghost em{font-style:italic;color:rgba(192,138,78,.07)}
 .founders .keyline::before{border-color:rgba(192,138,78,.6)}
+
+/* trademark + film credit */
+.logo sup{font-size:.42em;font-style:normal;color:var(--muted);margin-left:1px;letter-spacing:0}
+.player-bar .pl-credit{color:var(--muted)}
