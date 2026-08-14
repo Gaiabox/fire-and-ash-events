@@ -428,61 +428,71 @@ if (scrapFigs.length) {
   }, { passive: true });
 }
 
-/* ═══ film strip: drag rail + scrubber, autoplay on screen ═══ */
-const vstrip = document.querySelector('.vstrip');
-if (vstrip) {
-  const track = vstrip.querySelector('.vstrip-track');
-  const scrub = vstrip.querySelector('.vscrub');
-  const thumb = vstrip.querySelector('.vscrub-thumb');
-  const tiles = [...vstrip.querySelectorAll('.vtile')];
-  let x = 0, max = 0, thumbW = 40, dragging = null, moved = 0, startX = 0, startTrackX = 0;
+/* ═══ curved film carousel: slider pulls films through a 3D arc ═══ */
+const vstage = document.querySelector('.vstage');
+if (vstage) {
+  const scene = vstage.querySelector('.vstage-scene');
+  const scrub = vstage.querySelector('.vscrub');
+  const thumb = vstage.querySelector('.vscrub-thumb');
+  const tiles = [...vstage.querySelectorAll('.vtile')];
+  const N = tiles.length;
+  let p = 0, target = 0, raf = null, settled = 0;
+  let dragging = null, moved = 0, startX = 0, startP = 0;
+  const thumbW = 56;
 
-  const measure = () => {
-    max = Math.max(0, track.scrollWidth - vstrip.clientWidth);
-    const frac = vstrip.clientWidth / track.scrollWidth;
-    thumbW = Math.max(40, scrub.clientWidth * frac);
+  const render = () => {
+    tiles.forEach((t, i) => {
+      const d = i - p;
+      const ad = Math.abs(d);
+      if (ad > 2.3) { t.classList.add('off'); return; }
+      t.classList.remove('off');
+      const x = d * 78;                       // % sideways
+      const ry = Math.max(-52, Math.min(52, -d * 44));
+      const z = -ad * 260;
+      const dim = Math.max(0, 1 - ad * 0.75); // center bright, sides fall away
+      t.style.transform = `translate(-50%,-50%) translateX(${x}%) translateZ(${z}px) rotateY(${ry}deg)`;
+      t.style.opacity = Math.max(0.06, dim + 0.12);
+      t.style.filter = `brightness(${0.25 + dim * 0.75})`;
+      t.style.zIndex = String(100 - Math.round(ad * 10));
+    });
+    const frac = (N > 1) ? p / (N - 1) : 0;
+    thumb.style.left = (Math.max(0, Math.min(1, frac)) * (scrub.clientWidth - thumbW)) + 'px';
     thumb.style.width = thumbW + 'px';
-    apply();
-  };
-  const apply = () => {
-    x = Math.max(0, Math.min(max, x));
-    track.style.transform = `translate3d(${-x}px,0,0)`;
-    const p = max ? x / max : 0;
-    thumb.style.left = (p * (scrub.clientWidth - thumbW)) + 'px';
-    updatePlayback();
-  };
-  let playTimer = null;
-  const updatePlayback = () => {
-    clearTimeout(playTimer);
-    playTimer = setTimeout(() => {
-      const vw = vstrip.clientWidth;
-      tiles.forEach((t) => {
-        const v = t.querySelector('video');
-        const left = t.offsetLeft - x, right = left + t.offsetWidth;
-        const visible = Math.min(right, vw) - Math.max(left, 0);
-        const mostlyIn = visible > t.offsetWidth * 0.55;
-        if (mostlyIn && v.paused) { v.play().catch(() => {}); }
-        else if (!mostlyIn && !v.paused) { v.pause(); }
-      });
-    }, 120);
+    // playback: only the settled, centered film plays
+    const c = Math.round(p);
+    tiles.forEach((t, i) => {
+      const v = t.querySelector('video');
+      if (i === c && Math.abs(p - c) < 0.12) { if (v.paused) v.play().catch(() => {}); }
+      else if (!v.paused) v.pause();
+    });
   };
 
-  // drag the rail itself
-  vstrip.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('.vscrub')) return;
-    dragging = 'rail'; moved = 0; startX = e.clientX; startTrackX = x;
-    vstrip.classList.add('dragging');
+  const tick = () => {
+    p += (target - p) * 0.14;
+    if (Math.abs(target - p) < 0.002) p = target;
+    render();
+    if (p !== target) raf = requestAnimationFrame(tick);
+    else raf = null;
+  };
+  const go = (v) => {
+    target = Math.max(0, Math.min(N - 1, v));
+    if (!raf) raf = requestAnimationFrame(tick);
+  };
+
+  // drag the scene: pull films through the curve
+  scene.addEventListener('pointerdown', (e) => {
+    dragging = 'scene'; moved = 0; startX = e.clientX; startP = p;
+    vstage.classList.add('dragging');
   });
-  // drag the scrubber
+  // drag the slider
   scrub.addEventListener('pointerdown', (e) => {
-    dragging = 'scrub'; moved = 0; startX = e.clientX; startTrackX = x;
+    dragging = 'scrub'; moved = 0; startX = e.clientX; startP = p;
     scrub.classList.add('dragging');
-    // jump if clicking the track (not the thumb)
     if (!e.target.closest('.vscrub-thumb')) {
       const rect = scrub.getBoundingClientRect();
-      const p = (e.clientX - rect.left - thumbW / 2) / (rect.width - thumbW);
-      x = p * max; apply();
-      startTrackX = x;
+      const frac = (e.clientX - rect.left - thumbW / 2) / (rect.width - thumbW);
+      p = target = Math.max(0, Math.min(N - 1, frac * (N - 1)));
+      startP = p; render();
     }
     e.preventDefault();
   });
@@ -490,25 +500,26 @@ if (vstrip) {
     if (!dragging) return;
     const dx = e.clientX - startX;
     moved = Math.max(moved, Math.abs(dx));
-    if (dragging === 'rail') { x = startTrackX - dx; }
-    else {
-      const scale = max / Math.max(1, (scrub.clientWidth - thumbW));
-      x = startTrackX + dx * scale;
-    }
-    apply();
+    if (dragging === 'scene') p = startP - dx / (scene.clientWidth * 0.55);
+    else p = startP + dx / Math.max(1, (scrub.clientWidth - thumbW)) * (N - 1);
+    p = Math.max(-0.3, Math.min(N - 0.7, p));
+    target = p; render();
   }, { passive: true });
   window.addEventListener('pointerup', () => {
+    if (!dragging) return;
     dragging = null;
-    vstrip.classList.remove('dragging');
+    vstage.classList.remove('dragging');
     scrub.classList.remove('dragging');
+    go(Math.round(p)); // snap to the nearest film
   });
-  // click a tile (only if it wasn't a drag) → expand with sound
-  tiles.forEach((t) => t.addEventListener('click', (e) => {
+
+  // click the centered film (not a drag) → expand with sound
+  tiles.forEach((t, i) => t.addEventListener('click', (e) => {
     if (moved > 8) { e.preventDefault(); return; }
+    if (i !== Math.round(p)) { go(i); return; } // clicking a side film brings it to center
     openFilm(t.dataset.video);
   }));
 
-  // expanded film player
   const flb = document.createElement('div');
   flb.className = 'vlb';
   flb.setAttribute('role', 'dialog');
@@ -527,13 +538,13 @@ if (vstrip) {
     flb.classList.remove('open');
     flbVideo.pause(); flbVideo.removeAttribute('src'); flbVideo.load();
     document.body.style.overflow = '';
-    updatePlayback();
+    render();
   };
   flb.querySelector('.lb-close').addEventListener('click', closeFilm);
   flb.querySelector('.lb-veil').addEventListener('click', closeFilm);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && flb.classList.contains('open')) closeFilm(); });
 
-  window.addEventListener('resize', measure);
-  window.addEventListener('load', measure);
-  measure();
+  window.addEventListener('resize', render);
+  window.addEventListener('load', render);
+  render();
 }

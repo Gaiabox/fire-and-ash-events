@@ -866,3 +866,25 @@ h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-he
   .print img,.print video{max-height:66vh;max-width:88vw}
   .print{padding:8px 8px 20px}
 }
+
+/* ═══ curved film carousel: one at a time ═══ */
+.vstage{cursor:grab;overflow:hidden}
+.vstage.dragging{cursor:grabbing}
+.vstage-scene{
+  position:relative;height:min(56vh,540px);margin:1rem 0 0;
+  perspective:1100px;perspective-origin:50% 50%;
+}
+.vstage .vtile{
+  position:absolute;left:50%;top:50%;margin:0;
+  transform-style:preserve-3d;backface-visibility:hidden;
+  will-change:transform,opacity,filter;
+  border:1px solid rgba(242,234,217,.2);
+}
+.vstage .vtile video{height:min(50vh,480px);width:auto;pointer-events:none;background:var(--char)}
+.vstage .vtile.wide video{height:min(44vh,420px)}
+.vstage .vtile.off{display:none}
+@media(max-width:700px){
+  .vstage-scene{height:52vh}
+  .vstage .vtile video{height:44vh}
+  .vstage .vtile.wide video{height:32vh}
+}
