@@ -856,10 +856,21 @@ h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-he
 .scrap-next{right:clamp(.6rem,3vw,2.2rem)}
 .scrap-prev:hover,.scrap-next:hover{color:var(--copper)}
 .scrap-hint{
-  position:absolute;top:1.6rem;left:50%;transform:translateX(-50%);
-  font-size:.62rem;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;
+  position:absolute;top:1.4rem;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:.7rem;
   opacity:1;transition:opacity .6s;
 }
+.scrap-hint em{
+  font-family:"Playfair Display",serif;font-style:italic;font-size:.82rem;
+  letter-spacing:.14em;color:var(--cream);white-space:nowrap;
+}
+.scrap-hint em b{color:var(--copper);font-weight:400;margin:0 .45em}
+.scrap-hint i{
+  font-style:normal;color:var(--copper);font-size:.72rem;line-height:1;
+  animation:hintFloat 2.2s ease-in-out infinite;
+}
+.scrap-hint i:last-child{animation-delay:1.1s}
+@keyframes hintFloat{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(-4px);opacity:1}}
 .scrap.hinted .scrap-hint{opacity:0}
 @media(max-width:700px){
   .vtile video{height:30vh}
@@ -906,3 +917,65 @@ h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-he
   transition:background .3s;
 }
 .film-feature:hover .watch-strip{background:rgba(192,138,78,.55)}
+
+/* expanded film player: arrows + film strip */
+.vlb.has-strip.open{display:flex;flex-direction:column;justify-content:center;gap:1rem}
+.vlb .flb-stage{position:relative;z-index:2;display:flex;align-items:center;justify-content:center}
+.vlb.has-strip video{max-height:70vh;max-width:88vw}
+.flb-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:4;
+  background:rgba(24,20,17,.7);backdrop-filter:blur(10px);
+  border:1px solid rgba(242,234,217,.25);border-radius:50%;
+  width:52px;height:52px;color:var(--cream);font-size:1.7rem;line-height:1;
+  cursor:pointer;transition:border-color .25s,color .25s,background .25s;
+}
+.flb-arrow:hover{border-color:var(--copper);color:var(--copper)}
+.flb-prev{left:clamp(.6rem,3vw,2.4rem)}
+.flb-next{right:clamp(.6rem,3vw,2.4rem)}
+.flb-strip{
+  position:relative;z-index:3;display:flex;gap:.6rem;justify-content:center;
+  max-width:92vw;overflow-x:auto;padding:.2rem;scrollbar-width:none;
+}
+.flb-strip::-webkit-scrollbar{display:none}
+.flb-thumb{
+  flex:0 0 auto;padding:0;border:2px solid transparent;background:none;cursor:pointer;
+  opacity:.5;transition:opacity .25s,border-color .25s;
+}
+.flb-thumb img{height:60px;width:auto;display:block}
+.flb-thumb:hover{opacity:.85}
+.flb-thumb.on{opacity:1;border-color:var(--copper)}
+/* carousel side arrows */
+.vnav{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:120;
+  background:rgba(24,20,17,.72);backdrop-filter:blur(10px);
+  border:1px solid rgba(242,234,217,.25);border-radius:50%;
+  width:48px;height:48px;color:var(--cream);font-size:1.6rem;line-height:1;
+  cursor:pointer;transition:all .25s;
+}
+.vnav:hover{border-color:var(--copper);color:var(--copper)}
+.vnav.dim{opacity:.25;pointer-events:none}
+.vnav-prev{left:clamp(.8rem,6vw,6rem)}
+.vnav-next{right:clamp(.8rem,6vw,6rem)}
+@media(max-width:700px){
+  .vnav{width:42px;height:42px}
+  .vnav-prev{left:.5rem}.vnav-next{right:.5rem}
+  .flb-thumb img{height:44px}
+  .vlb.has-strip video{max-height:60vh}
+}
+
+/* reel thumbs: the not-playing films, small, under the playing one */
+.vthumbs{
+  display:flex;gap:.7rem;justify-content:center;align-items:center;
+  margin:1.2rem auto 0;max-width:92vw;overflow-x:auto;padding:.2rem .6rem;
+  scrollbar-width:none;
+}
+.vthumbs::-webkit-scrollbar{display:none}
+.vthumb{
+  flex:0 0 auto;padding:0;background:none;cursor:pointer;
+  border:2px solid transparent;opacity:.45;
+  transition:opacity .3s,border-color .3s,transform .3s;
+}
+.vthumb img{height:72px;width:auto;display:block}
+.vthumb:hover{opacity:.85}
+.vthumb.on{opacity:1;border-color:var(--copper);transform:scale(1.06)}
+@media(max-width:700px){.vthumb img{height:52px}}

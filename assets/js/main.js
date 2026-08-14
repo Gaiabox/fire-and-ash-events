@@ -336,7 +336,7 @@ if (scrapFigs.length) {
     + '<div class="print ghost g-next"><img alt=""></div>'
     + '<div class="print main"><img alt=""></div>'
     + '<div class="scrap-ui">'
-    + '<span class="scrap-hint">Scroll or drag to flip through</span>'
+    + '<span class="scrap-hint"><i>↑</i><em>Scroll<b>·</b>The Album</em><i>↓</i></span>'
     + '<button class="scrap-close">Close</button>'
     + '<button class="scrap-prev" aria-label="Previous photo">‹ Prev</button>'
     + '<button class="scrap-next" aria-label="Next photo">Next ›</button>'
@@ -432,33 +432,43 @@ if (scrapFigs.length) {
 const vstage = document.querySelector('.vstage');
 if (vstage) {
   const scene = vstage.querySelector('.vstage-scene');
-  const scrub = vstage.querySelector('.vscrub');
-  const thumb = vstage.querySelector('.vscrub-thumb');
   const tiles = [...vstage.querySelectorAll('.vtile')];
   const N = tiles.length;
-  let p = 0, target = 0, raf = null, settled = 0;
+  let p = 0, target = 0, raf = null;
   let dragging = null, moved = 0, startX = 0, startP = 0;
-  const thumbW = 56;
+
+  // the reels that are not playing live small, under the playing one
+  const vthumbs = document.createElement('div');
+  vthumbs.className = 'vthumbs';
+  vthumbs.setAttribute('aria-label', 'All reels');
+  const vtButtons = tiles.map((t, i) => {
+    const b = document.createElement('button');
+    b.className = 'vthumb';
+    b.setAttribute('aria-label', 'Show ' + ((t.querySelector('.vtile-tag') || {}).textContent || 'reel ' + (i + 1)));
+    b.innerHTML = '<img src="' + t.querySelector('video').getAttribute('poster') + '" alt="">';
+    b.addEventListener('click', () => go(i));
+    vthumbs.appendChild(b);
+    return b;
+  });
+  scene.after(vthumbs);
+  let navPrev = null, navNext = null;
 
   const render = () => {
     tiles.forEach((t, i) => {
       const d = i - p;
       const ad = Math.abs(d);
-      if (ad > 2.3) { t.classList.add('off'); return; }
+      if (ad > 1.2) { t.classList.add('off'); return; }
       t.classList.remove('off');
-      const x = d * 92;                       // % sideways
-      const sc = Math.max(0.86, 1 - ad * 0.1);
-      const dim = Math.max(0, 1 - ad * 0.72);
+      const x = d * 64;                       // % sideways while sliding
+      const sc = Math.max(0.92, 1 - ad * 0.05);
       t.style.transform = `translate(-50%,-50%) translateX(${x}%) scale(${sc})`;
-      t.style.opacity = Math.max(0.15, dim + 0.15);
-      t.style.filter = `brightness(${0.45 + dim * 0.55})`;
+      t.style.opacity = String(Math.max(0, 1 - ad * 1.1));
       t.style.zIndex = String(100 - Math.round(ad * 10));
     });
-    const frac = (N > 1) ? p / (N - 1) : 0;
-    thumb.style.left = (Math.max(0, Math.min(1, frac)) * (scrub.clientWidth - thumbW)) + 'px';
-    thumb.style.width = thumbW + 'px';
-    // playback: only the settled, centered film plays
     const c = Math.round(p);
+    vtButtons.forEach((b, i) => b.classList.toggle('on', i === c));
+    if (navPrev) { navPrev.classList.toggle('dim', c <= 0); navNext.classList.toggle('dim', c >= N - 1); }
+    // playback: only the settled, centered film plays
     tiles.forEach((t, i) => {
       const v = t.querySelector('video');
       if (i === c && Math.abs(p - c) < 0.12) { if (v.paused) v.play().catch(() => {}); }
@@ -483,24 +493,11 @@ if (vstage) {
     dragging = 'scene'; moved = 0; startX = e.clientX; startP = p;
     vstage.classList.add('dragging');
   });
-  // drag the slider
-  scrub.addEventListener('pointerdown', (e) => {
-    dragging = 'scrub'; moved = 0; startX = e.clientX; startP = p;
-    scrub.classList.add('dragging');
-    if (!e.target.closest('.vscrub-thumb')) {
-      const rect = scrub.getBoundingClientRect();
-      const frac = (e.clientX - rect.left - thumbW / 2) / (rect.width - thumbW);
-      p = target = Math.max(0, Math.min(N - 1, frac * (N - 1)));
-      startP = p; render();
-    }
-    e.preventDefault();
-  });
   window.addEventListener('pointermove', (e) => {
     if (!dragging) return;
     const dx = e.clientX - startX;
     moved = Math.max(moved, Math.abs(dx));
-    if (dragging === 'scene') p = startP - dx / (scene.clientWidth * 0.55);
-    else p = startP + dx / Math.max(1, (scrub.clientWidth - thumbW)) * (N - 1);
+    p = startP - dx / (scene.clientWidth * 0.55);
     p = Math.max(-0.3, Math.min(N - 0.7, p));
     target = p; render();
   }, { passive: true });
@@ -508,30 +505,56 @@ if (vstage) {
     if (!dragging) return;
     dragging = null;
     vstage.classList.remove('dragging');
-    scrub.classList.remove('dragging');
     go(Math.round(p)); // snap to the nearest film
   });
 
   // click the centered film (not a drag) → expand with sound
   tiles.forEach((t, i) => t.addEventListener('click', (e) => {
     if (moved > 8) { e.preventDefault(); return; }
-    if (i !== Math.round(p)) { go(i); return; } // clicking a side film brings it to center
-    openFilm(t.dataset.video);
+    if (i !== Math.round(p)) { go(i); return; }
+    openFilm(featureBtn ? i + 1 : i);
   }));
 
+  // one film list for the expanded player: feature first, then the reels
+  const featureBtn = document.querySelector('.film-feature');
+  const FILMS = [];
+  if (featureBtn) FILMS.push({ src: featureBtn.dataset.video, poster: featureBtn.querySelector('video').getAttribute('poster'), label: 'Deerwood' });
+  tiles.forEach((t) => FILMS.push({ src: t.dataset.video, poster: t.querySelector('video').getAttribute('poster'), label: (t.querySelector('.vtile-tag') || {}).textContent || 'Reel' }));
+
   const flb = document.createElement('div');
-  flb.className = 'vlb';
+  flb.className = 'vlb has-strip';
   flb.setAttribute('role', 'dialog');
   flb.setAttribute('aria-label', 'Film player');
-  flb.innerHTML = '<div class="lb-veil"></div><video controls playsinline preload="none"></video><button class="lb-close" aria-label="Close film">Close</button>';
+  flb.innerHTML = '<div class="lb-veil"></div>'
+    + '<div class="flb-stage"><video controls playsinline preload="none"></video></div>'
+    + '<button class="flb-arrow flb-prev" aria-label="Previous film">‹</button>'
+    + '<button class="flb-arrow flb-next" aria-label="Next film">›</button>'
+    + '<div class="flb-strip" role="tablist" aria-label="All films"></div>'
+    + '<button class="lb-close" aria-label="Close film">Close</button>';
   document.body.appendChild(flb);
   const flbVideo = flb.querySelector('video');
-  const openFilm = (src) => {
+  const strip = flb.querySelector('.flb-strip');
+  FILMS.forEach((f, i) => {
+    const b = document.createElement('button');
+    b.className = 'flb-thumb';
+    b.setAttribute('aria-label', 'Play ' + f.label);
+    b.innerHTML = '<img src="' + f.poster + '" alt="">';
+    b.addEventListener('click', () => showFilm(i));
+    strip.appendChild(b);
+  });
+  let filmIdx = 0;
+  const showFilm = (i) => {
+    filmIdx = (i + FILMS.length) % FILMS.length;
+    flbVideo.src = FILMS[filmIdx].src;
+    flbVideo.play().catch(() => {});
+    [...strip.children].forEach((b, bi) => b.classList.toggle('on', bi === filmIdx));
+  };
+  const openFilm = (i) => {
     tiles.forEach(t => t.querySelector('video').pause());
-    flbVideo.src = src;
+    if (featureBtn) featureBtn.querySelector('video').pause();
     flb.classList.add('open');
     document.body.style.overflow = 'hidden';
-    flbVideo.play().catch(() => {});
+    showFilm(i);
   };
   const closeFilm = () => {
     flb.classList.remove('open');
@@ -539,9 +562,30 @@ if (vstage) {
     document.body.style.overflow = '';
     render();
   };
+  flb.querySelector('.flb-prev').addEventListener('click', () => showFilm(filmIdx - 1));
+  flb.querySelector('.flb-next').addEventListener('click', () => showFilm(filmIdx + 1));
   flb.querySelector('.lb-close').addEventListener('click', closeFilm);
   flb.querySelector('.lb-veil').addEventListener('click', closeFilm);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && flb.classList.contains('open')) closeFilm(); });
+  document.addEventListener('keydown', (e) => {
+    if (!flb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeFilm();
+    if (e.key === 'ArrowLeft') showFilm(filmIdx - 1);
+    if (e.key === 'ArrowRight') showFilm(filmIdx + 1);
+  });
+
+  // side arrows on the muted carousel
+  const mkNav = (cls, label, dir) => {
+    const b = document.createElement('button');
+    b.className = 'vnav ' + cls;
+    b.setAttribute('aria-label', label);
+    b.textContent = dir < 0 ? '‹' : '›';
+    b.addEventListener('pointerdown', (e) => e.stopPropagation());
+    b.addEventListener('click', (e) => { e.stopPropagation(); go(Math.round(target) + dir); });
+    scene.appendChild(b);
+    return b;
+  };
+  navPrev = mkNav('vnav-prev', 'Previous reel', -1);
+  navNext = mkNav('vnav-next', 'Next reel', 1);
 
   // featured wide film
   const feature = document.querySelector('.film-feature');
@@ -553,7 +597,7 @@ if (vstage) {
         else fv.pause();
       });
     }, { threshold: 0.4 }).observe(feature);
-    feature.addEventListener('click', () => openFilm(feature.dataset.video));
+    feature.addEventListener('click', () => openFilm(0));
   }
 
   window.addEventListener('resize', render);
