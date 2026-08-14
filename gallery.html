@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css?v=20">
+<link rel="stylesheet" href="/assets/css/style.css?v=21">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
   {"@type":"ListItem","position":1,"name":"Home","item":"https://fireandashevents.com/"},
@@ -62,36 +62,36 @@
 <section class="films" style="padding:3rem 0 1rem">
   <div class="wrap">
     <span class="label" data-reveal>The Films</span>
+    <button class="film-feature" data-video="/assets/video/gallery/film-deerwood.mp4" aria-label="Play the Deerwood event film with sound">
+      <video muted loop playsinline preload="none" poster="/assets/img/gallery/film-deerwood-poster.webp" data-src="/assets/video/gallery/film-deerwood.mp4"></video>
+      <span class="watch-strip">▶&nbsp; Deerwood · Watch the full film</span>
+    </button>
   </div>
-  <div class="vstrip vstage" aria-label="Film carousel. Drag the slider to move between films, click the centered film to watch with sound.">
+  <div class="vstage" aria-label="Reel carousel. Drag the slider to move between reels, click the centered reel to watch with sound.">
     <div class="vstage-scene">
-      <button class="vtile wide" data-video="/assets/video/gallery/film-deerwood.mp4" aria-label="Play the Deerwood event film">
-        <video muted loop playsinline preload="none" poster="/assets/img/gallery/film-deerwood-poster.webp" data-src="/assets/video/gallery/film-deerwood.mp4"></video>
-        <span class="vtile-tag">Deerwood · 0:53</span>
-      </button>
       <button class="vtile" data-video="/assets/video/gallery/reel-havana.mp4" aria-label="Play the Havana Nights reel">
-        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-havana-poster.webp" data-src="/assets/video/gallery/reel-havana.mp4"></video>
-        <span class="vtile-tag">Havana Nights · 0:55</span>
+        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-havana-poster.webp"></video>
+        <span class="vtile-tag">Havana Nights</span>
       </button>
       <button class="vtile" data-video="/assets/video/gallery/reel-smokin.mp4" aria-label="Play the Smokin reel">
-        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-smokin-poster.webp" data-src="/assets/video/gallery/reel-smokin.mp4"></video>
-        <span class="vtile-tag">Smokin · 0:30</span>
+        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-smokin-poster.webp"></video>
+        <span class="vtile-tag">Smokin</span>
       </button>
       <button class="vtile" data-video="/assets/video/gallery/reel-june-1.mp4" aria-label="Play the June reel one">
-        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-june-1-poster.webp" data-src="/assets/video/gallery/reel-june-1.mp4"></video>
-        <span class="vtile-tag">June · 0:38</span>
+        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-june-1-poster.webp"></video>
+        <span class="vtile-tag">June · I</span>
       </button>
       <button class="vtile" data-video="/assets/video/gallery/reel-june-2.mp4" aria-label="Play the June reel two">
-        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-june-2-poster.webp" data-src="/assets/video/gallery/reel-june-2.mp4"></video>
-        <span class="vtile-tag">June · 0:33</span>
+        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-june-2-poster.webp"></video>
+        <span class="vtile-tag">June · II</span>
       </button>
       <button class="vtile" data-video="/assets/video/gallery/reel-june-3.mp4" aria-label="Play the June reel three">
-        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-june-3-poster.webp" data-src="/assets/video/gallery/reel-june-3.mp4"></video>
-        <span class="vtile-tag">June · 0:29</span>
+        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-june-3-poster.webp"></video>
+        <span class="vtile-tag">June · III</span>
       </button>
       <button class="vtile" data-video="/assets/video/gallery/reel-carlos.mp4" aria-label="Play the Carlos reel">
-        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-carlos-poster.webp" data-src="/assets/video/gallery/reel-carlos.mp4"></video>
-        <span class="vtile-tag">Carlos · 0:10</span>
+        <video muted loop playsinline preload="none" poster="/assets/img/gallery/reel-carlos-poster.webp"></video>
+        <span class="vtile-tag">Carlos</span>
       </button>
     </div>
     <div class="vscrub" aria-hidden="true"><span class="vscrub-thumb"></span></div>
@@ -303,7 +303,6 @@
   <a href="/inquire">Inquire</a>
 </nav>
 
-<script src="/assets/js/film-gl.js?v=1" defer></script>
-<script src="/assets/js/main.js?v=20" defer></script>
+<script src="/assets/js/main.js?v=21" defer></script>
 </body>
 </html>

@@ -430,7 +430,7 @@ if (scrapFigs.length) {
 
 /* ═══ curved film carousel: slider pulls films through a 3D arc ═══ */
 const vstage = document.querySelector('.vstage');
-if (vstage && !document.documentElement.classList.contains('film-gl')) {
+if (vstage) {
   const scene = vstage.querySelector('.vstage-scene');
   const scrub = vstage.querySelector('.vscrub');
   const thumb = vstage.querySelector('.vscrub-thumb');
@@ -446,13 +446,12 @@ if (vstage && !document.documentElement.classList.contains('film-gl')) {
       const ad = Math.abs(d);
       if (ad > 2.3) { t.classList.add('off'); return; }
       t.classList.remove('off');
-      const x = d * 78;                       // % sideways
-      const ry = Math.max(-52, Math.min(52, -d * 44));
-      const z = -ad * 260;
-      const dim = Math.max(0, 1 - ad * 0.75); // center bright, sides fall away
-      t.style.transform = `translate(-50%,-50%) translateX(${x}%) translateZ(${z}px) rotateY(${ry}deg)`;
-      t.style.opacity = Math.max(0.06, dim + 0.12);
-      t.style.filter = `brightness(${0.25 + dim * 0.75})`;
+      const x = d * 92;                       // % sideways
+      const sc = Math.max(0.86, 1 - ad * 0.1);
+      const dim = Math.max(0, 1 - ad * 0.72);
+      t.style.transform = `translate(-50%,-50%) translateX(${x}%) scale(${sc})`;
+      t.style.opacity = Math.max(0.15, dim + 0.15);
+      t.style.filter = `brightness(${0.45 + dim * 0.55})`;
       t.style.zIndex = String(100 - Math.round(ad * 10));
     });
     const frac = (N > 1) ? p / (N - 1) : 0;
@@ -543,6 +542,19 @@ if (vstage && !document.documentElement.classList.contains('film-gl')) {
   flb.querySelector('.lb-close').addEventListener('click', closeFilm);
   flb.querySelector('.lb-veil').addEventListener('click', closeFilm);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && flb.classList.contains('open')) closeFilm(); });
+
+  // featured wide film
+  const feature = document.querySelector('.film-feature');
+  if (feature) {
+    const fv = feature.querySelector('video');
+    new IntersectionObserver((es) => {
+      es.forEach((en) => {
+        if (en.isIntersecting) { fv.src = fv.dataset.src; fv.play().catch(() => {}); }
+        else fv.pause();
+      });
+    }, { threshold: 0.4 }).observe(feature);
+    feature.addEventListener('click', () => openFilm(feature.dataset.video));
+  }
 
   window.addEventListener('resize', render);
   window.addEventListener('load', render);
