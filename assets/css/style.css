@@ -888,9 +888,11 @@ h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-he
   position:absolute;left:50%;top:50%;margin:0;
   transform-style:preserve-3d;backface-visibility:hidden;
   will-change:transform,opacity,filter;
-  border:1px solid rgba(242,234,217,.2);
+  border:none;
 }
-.vstage .vtile video{height:min(50vh,480px);width:auto;pointer-events:none;background:var(--char)}
+.vstage .vtile::after{display:none}
+.vstage .vtile .vtile-tag{display:none}
+.vstage .vtile video{height:min(50vh,480px);width:auto;aspect-ratio:9/16;object-fit:cover;pointer-events:none;background:var(--char)}
 .vstage .vtile.wide video{height:min(44vh,420px)}
 .vstage .vtile.off{display:none}
 @media(max-width:700px){
