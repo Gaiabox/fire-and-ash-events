@@ -270,118 +270,7 @@ reserveForms.forEach((reserveForm) => {
   });
 });
 
-/* ── Gallery lightbox: FLIP zoom from grid, PREV/CLOSE/NEXT ── */
-const galleryFigs = [...document.querySelectorAll('.masonry figure')].filter(f => f.querySelector('img'));
-if (galleryFigs.length) {
-  const lb = document.createElement('div');
-  lb.className = 'lb';
-  lb.setAttribute('role', 'dialog');
-  lb.setAttribute('aria-label', 'Photo viewer');
-  lb.innerHTML = '<div class="lb-veil"></div><span class="lb-count"></span>'
-    + '<figure class="lb-img"><img alt=""></figure>'
-    + '<button class="lb-prev" aria-label="Previous photo">Prev</button>'
-    + '<button class="lb-next" aria-label="Next photo">Next</button>'
-    + '<button class="lb-close" aria-label="Close viewer">Close</button>';
-  document.body.appendChild(lb);
 
-  const box = lb.querySelector('.lb-img');
-  const pic = box.querySelector('img');
-  const count = lb.querySelector('.lb-count');
-  const DUR = 190;
-  let idx = -1, open = false;
-
-  const fitRect = (w, h) => {
-    const pad = window.innerWidth < 700 ? 14 : 56;
-    const maxW = window.innerWidth - pad * 2;
-    const maxH = window.innerHeight - pad * 2;
-    const s = Math.min(maxW / w, maxH / h);
-    const fw = w * s, fh = h * s;
-    return { x: (window.innerWidth - fw) / 2, y: (window.innerHeight - fh) / 2, w: fw, h: fh };
-  };
-
-  const srcAt = (i) => galleryFigs[i].querySelector('img');
-
-  const setImage = (i) => {
-    const t = srcAt(i);
-    pic.src = t.currentSrc || t.src;
-    pic.alt = t.alt;
-    count.textContent = (i + 1) + ' / ' + galleryFigs.length;
-    const w = t.naturalWidth || 1200, h = t.naturalHeight || 1600;
-    const f = fitRect(w, h);
-    box.style.left = f.x + 'px'; box.style.top = f.y + 'px';
-    box.style.width = f.w + 'px'; box.style.height = f.h + 'px';
-    // preload neighbors
-    [i - 1, i + 1].forEach((n) => {
-      const nn = (n + galleryFigs.length) % galleryFigs.length;
-      const im = new Image(); im.src = srcAt(nn).currentSrc || srcAt(nn).src;
-    });
-  };
-
-  const openAt = (i) => {
-    idx = i; open = true;
-    const t = srcAt(i);
-    const r = t.getBoundingClientRect();
-    setImage(i);
-    lb.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    // FLIP: from thumbnail rect to final rect
-    const f = box.getBoundingClientRect();
-    const sx = r.width / f.width, sy = r.height / f.height;
-    box.style.transition = 'none';
-    box.style.transform = `translate(${r.left - f.left}px,${r.top - f.top}px) scale(${sx},${sy})`;
-    requestAnimationFrame(() => {
-      box.style.transition = `transform ${DUR}ms cubic-bezier(.2,.9,.25,1)`;
-      box.style.transform = 'none';
-    });
-  };
-
-  const close = () => {
-    if (!open) return;
-    open = false;
-    const t = srcAt(idx);
-    const r = t.getBoundingClientRect();
-    const f = box.getBoundingClientRect();
-    const sx = r.width / f.width, sy = r.height / f.height;
-    box.style.transition = `transform ${DUR}ms cubic-bezier(.2,.9,.25,1)`;
-    box.style.transform = `translate(${r.left - f.left}px,${r.top - f.top}px) scale(${sx},${sy})`;
-    lb.querySelector('.lb-veil').style.opacity = 0;
-    setTimeout(() => {
-      lb.classList.remove('open');
-      box.style.transform = 'none';
-      lb.querySelector('.lb-veil').style.opacity = '';
-      document.body.style.overflow = '';
-    }, DUR);
-  };
-
-  const step = (dir) => {
-    idx = (idx + dir + galleryFigs.length) % galleryFigs.length;
-    box.style.transition = `opacity 90ms ease-out`;
-    box.style.opacity = 0;
-    setTimeout(() => { setImage(idx); box.style.opacity = 1; }, 90);
-  };
-
-  galleryFigs.forEach((f, i) => f.addEventListener('click', () => openAt(i)));
-  lb.querySelector('.lb-close').addEventListener('click', close);
-  lb.querySelector('.lb-veil').addEventListener('click', close);
-  lb.querySelector('.lb-prev').addEventListener('click', () => step(-1));
-  lb.querySelector('.lb-next').addEventListener('click', () => step(1));
-  document.addEventListener('keydown', (e) => {
-    if (!open) return;
-    if (e.key === 'Escape') close();
-    if (e.key === 'ArrowLeft') step(-1);
-    if (e.key === 'ArrowRight') step(1);
-  });
-  // touch swipe
-  let tx = null;
-  lb.addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; }, { passive: true });
-  lb.addEventListener('touchend', (e) => {
-    if (tx === null) return;
-    const dx = e.changedTouches[0].clientX - tx;
-    if (Math.abs(dx) > 48) step(dx > 0 ? -1 : 1);
-    tx = null;
-  }, { passive: true });
-  window.addEventListener('resize', () => { if (open) setImage(idx); });
-}
 
 /* ── event-moment rotator: one at a time, clean crossfade ── */
 const rotator = document.querySelector('.rotator');
@@ -429,4 +318,222 @@ if (turfExpand) {
   vlb.querySelector('.lb-close').addEventListener('click', closeV);
   vlb.querySelector('.lb-veil').addEventListener('click', closeV);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && vlb.classList.contains('open')) closeV(); });
+}
+
+/* ═══ Scrapbook viewer: prints on a pile, scroll/drag to flip through ═══ */
+const scrapFigs = [...document.querySelectorAll('.masonry figure')].filter(f => f.querySelector('img'));
+if (scrapFigs.length) {
+  const items = scrapFigs.map(f => {
+    const i = f.querySelector('img');
+    return { src: i.currentSrc || i.src, alt: i.alt || '' };
+  });
+  const scrap = document.createElement('div');
+  scrap.className = 'scrap';
+  scrap.setAttribute('role', 'dialog');
+  scrap.setAttribute('aria-label', 'Photo album');
+  scrap.innerHTML = '<div class="scrap-veil"></div>'
+    + '<div class="print ghost g-prev"><img alt=""></div>'
+    + '<div class="print ghost g-next"><img alt=""></div>'
+    + '<div class="print main"><img alt=""></div>'
+    + '<div class="scrap-ui">'
+    + '<span class="scrap-hint">Scroll or drag to flip through</span>'
+    + '<button class="scrap-close">Close</button>'
+    + '<button class="scrap-prev" aria-label="Previous photo">‹ Prev</button>'
+    + '<button class="scrap-next" aria-label="Next photo">Next ›</button>'
+    + '<span class="scrap-count"></span>'
+    + '</div>';
+  document.body.appendChild(scrap);
+  if (reduced) scrap.classList.add('reduced');
+
+  const main = scrap.querySelector('.print.main');
+  const mainImg = main.querySelector('img');
+  const gPrev = scrap.querySelector('.g-prev img');
+  const gNext = scrap.querySelector('.g-next img');
+  const count = scrap.querySelector('.scrap-count');
+  let idx = 0, isOpen = false, animating = false, wheelAcc = 0;
+
+  const mod = (n) => (n + items.length) % items.length;
+  const paint = () => {
+    mainImg.src = items[idx].src; mainImg.alt = items[idx].alt;
+    gPrev.src = items[mod(idx - 1)].src;
+    gNext.src = items[mod(idx + 1)].src;
+    main.style.setProperty('--tilt', (idx % 2 ? 1.4 : -1.4) + 'deg');
+    count.textContent = (idx + 1) + ' / ' + items.length;
+    [mod(idx + 2), mod(idx - 2)].forEach(n => { const im = new Image(); im.src = items[n].src; });
+  };
+
+  const openScrap = (i) => {
+    idx = i; isOpen = true; paint();
+    scrap.classList.add('open');
+    scrap.classList.remove('hinted');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => scrap.classList.add('hinted'), 2600);
+  };
+  const closeScrap = () => {
+    isOpen = false;
+    scrap.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  const step = (dir) => {
+    if (animating) return;
+    animating = true;
+    main.classList.add(dir > 0 ? 'exit-up' : 'exit-down');
+    setTimeout(() => {
+      idx = mod(idx + dir); paint();
+      main.classList.remove('exit-up', 'exit-down');
+      main.classList.add(dir > 0 ? 'enter-down' : 'enter-up');
+      // force the start frame, then release to transition into place
+      void main.offsetWidth;
+      main.classList.remove('enter-down', 'enter-up');
+      setTimeout(() => { animating = false; }, reduced ? 0 : 330);
+    }, reduced ? 0 : 300);
+  };
+
+  scrapFigs.forEach((f, i) => f.addEventListener('click', () => openScrap(i)));
+  scrap.querySelector('.scrap-close').addEventListener('click', closeScrap);
+  scrap.querySelector('.scrap-veil').addEventListener('click', closeScrap);
+  scrap.querySelector('.scrap-prev').addEventListener('click', () => step(-1));
+  scrap.querySelector('.scrap-next').addEventListener('click', () => step(1));
+  document.addEventListener('keydown', (e) => {
+    if (!isOpen) return;
+    if (e.key === 'Escape') closeScrap();
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') step(1);
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') step(-1);
+  });
+  scrap.addEventListener('wheel', (e) => {
+    if (!isOpen) return;
+    e.preventDefault();
+    if (animating) return;
+    wheelAcc += e.deltaY;
+    if (wheelAcc > 70) { wheelAcc = 0; step(1); }
+    else if (wheelAcc < -70) { wheelAcc = 0; step(-1); }
+  }, { passive: false });
+  // thumb drag: print follows the finger, release to flip
+  let ty = null;
+  scrap.addEventListener('touchstart', (e) => { ty = e.touches[0].clientY; }, { passive: true });
+  scrap.addEventListener('touchmove', (e) => {
+    if (ty === null || animating) return;
+    e.preventDefault();
+    const dy = e.touches[0].clientY - ty;
+    main.style.transition = 'none';
+    main.style.transform = `translate(-50%, calc(-50% + ${dy * 0.55}px)) rotate(var(--tilt))`;
+  }, { passive: false });
+  scrap.addEventListener('touchend', (e) => {
+    if (ty === null) return;
+    const dy = e.changedTouches[0].clientY - ty;
+    main.style.transition = ''; main.style.transform = '';
+    if (Math.abs(dy) > 64) step(dy < 0 ? 1 : -1);
+    ty = null;
+  }, { passive: true });
+}
+
+/* ═══ film strip: drag rail + scrubber, autoplay on screen ═══ */
+const vstrip = document.querySelector('.vstrip');
+if (vstrip) {
+  const track = vstrip.querySelector('.vstrip-track');
+  const scrub = vstrip.querySelector('.vscrub');
+  const thumb = vstrip.querySelector('.vscrub-thumb');
+  const tiles = [...vstrip.querySelectorAll('.vtile')];
+  let x = 0, max = 0, thumbW = 40, dragging = null, moved = 0, startX = 0, startTrackX = 0;
+
+  const measure = () => {
+    max = Math.max(0, track.scrollWidth - vstrip.clientWidth);
+    const frac = vstrip.clientWidth / track.scrollWidth;
+    thumbW = Math.max(40, scrub.clientWidth * frac);
+    thumb.style.width = thumbW + 'px';
+    apply();
+  };
+  const apply = () => {
+    x = Math.max(0, Math.min(max, x));
+    track.style.transform = `translate3d(${-x}px,0,0)`;
+    const p = max ? x / max : 0;
+    thumb.style.left = (p * (scrub.clientWidth - thumbW)) + 'px';
+    updatePlayback();
+  };
+  let playTimer = null;
+  const updatePlayback = () => {
+    clearTimeout(playTimer);
+    playTimer = setTimeout(() => {
+      const vw = vstrip.clientWidth;
+      tiles.forEach((t) => {
+        const v = t.querySelector('video');
+        const left = t.offsetLeft - x, right = left + t.offsetWidth;
+        const visible = Math.min(right, vw) - Math.max(left, 0);
+        const mostlyIn = visible > t.offsetWidth * 0.55;
+        if (mostlyIn && v.paused) { v.play().catch(() => {}); }
+        else if (!mostlyIn && !v.paused) { v.pause(); }
+      });
+    }, 120);
+  };
+
+  // drag the rail itself
+  vstrip.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('.vscrub')) return;
+    dragging = 'rail'; moved = 0; startX = e.clientX; startTrackX = x;
+    vstrip.classList.add('dragging');
+  });
+  // drag the scrubber
+  scrub.addEventListener('pointerdown', (e) => {
+    dragging = 'scrub'; moved = 0; startX = e.clientX; startTrackX = x;
+    scrub.classList.add('dragging');
+    // jump if clicking the track (not the thumb)
+    if (!e.target.closest('.vscrub-thumb')) {
+      const rect = scrub.getBoundingClientRect();
+      const p = (e.clientX - rect.left - thumbW / 2) / (rect.width - thumbW);
+      x = p * max; apply();
+      startTrackX = x;
+    }
+    e.preventDefault();
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    moved = Math.max(moved, Math.abs(dx));
+    if (dragging === 'rail') { x = startTrackX - dx; }
+    else {
+      const scale = max / Math.max(1, (scrub.clientWidth - thumbW));
+      x = startTrackX + dx * scale;
+    }
+    apply();
+  }, { passive: true });
+  window.addEventListener('pointerup', () => {
+    dragging = null;
+    vstrip.classList.remove('dragging');
+    scrub.classList.remove('dragging');
+  });
+  // click a tile (only if it wasn't a drag) → expand with sound
+  tiles.forEach((t) => t.addEventListener('click', (e) => {
+    if (moved > 8) { e.preventDefault(); return; }
+    openFilm(t.dataset.video);
+  }));
+
+  // expanded film player
+  const flb = document.createElement('div');
+  flb.className = 'vlb';
+  flb.setAttribute('role', 'dialog');
+  flb.setAttribute('aria-label', 'Film player');
+  flb.innerHTML = '<div class="lb-veil"></div><video controls playsinline preload="none"></video><button class="lb-close" aria-label="Close film">Close</button>';
+  document.body.appendChild(flb);
+  const flbVideo = flb.querySelector('video');
+  const openFilm = (src) => {
+    tiles.forEach(t => t.querySelector('video').pause());
+    flbVideo.src = src;
+    flb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    flbVideo.play().catch(() => {});
+  };
+  const closeFilm = () => {
+    flb.classList.remove('open');
+    flbVideo.pause(); flbVideo.removeAttribute('src'); flbVideo.load();
+    document.body.style.overflow = '';
+    updatePlayback();
+  };
+  flb.querySelector('.lb-close').addEventListener('click', closeFilm);
+  flb.querySelector('.lb-veil').addEventListener('click', closeFilm);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && flb.classList.contains('open')) closeFilm(); });
+
+  window.addEventListener('resize', measure);
+  window.addEventListener('load', measure);
+  measure();
 }
