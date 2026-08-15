@@ -428,95 +428,13 @@ if (scrapFigs.length) {
   }, { passive: true });
 }
 
-/* ═══ curved film carousel: slider pulls films through a 3D arc ═══ */
+/* ═══ the films: featured auto-play + reel thumbnails → expanded player ═══ */
 const vstage = document.querySelector('.vstage');
 if (vstage) {
-  const scene = vstage.querySelector('.vstage-scene');
   const tiles = [...vstage.querySelectorAll('.vtile')];
-  const N = tiles.length;
-  let p = 0, target = 0, raf = null;
-  let dragging = null, moved = 0, startX = 0, startP = 0;
-
-  // the reels that are not playing live small, under the playing one
-  const vthumbs = document.createElement('div');
-  vthumbs.className = 'vthumbs';
-  vthumbs.setAttribute('aria-label', 'All reels');
-  const vtButtons = tiles.map((t, i) => {
-    const b = document.createElement('button');
-    b.className = 'vthumb';
-    b.setAttribute('aria-label', 'Show ' + ((t.querySelector('.vtile-tag') || {}).textContent || 'reel ' + (i + 1)));
-    b.innerHTML = '<img src="' + t.querySelector('video').getAttribute('poster') + '" alt="">';
-    b.addEventListener('click', () => go(i));
-    vthumbs.appendChild(b);
-    return b;
-  });
-  scene.after(vthumbs);
-  let navPrev = null, navNext = null;
-
-  const render = () => {
-    tiles.forEach((t, i) => {
-      const d = i - p;
-      const ad = Math.abs(d);
-      if (ad > 1.2) { t.classList.add('off'); return; }
-      t.classList.remove('off');
-      const x = d * 64;                       // % sideways while sliding
-      const sc = Math.max(0.92, 1 - ad * 0.05);
-      t.style.transform = `translate(-50%,-50%) translateX(${x}%) scale(${sc})`;
-      t.style.opacity = String(Math.max(0, 1 - ad * 1.1));
-      t.style.zIndex = String(100 - Math.round(ad * 10));
-    });
-    const c = Math.round(p);
-    vtButtons.forEach((b, i) => b.classList.toggle('on', i === c));
-    if (navPrev) { navPrev.classList.toggle('dim', c <= 0); navNext.classList.toggle('dim', c >= N - 1); }
-    // playback: only the settled, centered film plays
-    tiles.forEach((t, i) => {
-      const v = t.querySelector('video');
-      if (i === c && Math.abs(p - c) < 0.12) { if (v.paused) v.play().catch(() => {}); }
-      else if (!v.paused) v.pause();
-    });
-  };
-
-  const tick = () => {
-    p += (target - p) * 0.14;
-    if (Math.abs(target - p) < 0.002) p = target;
-    render();
-    if (p !== target) raf = requestAnimationFrame(tick);
-    else raf = null;
-  };
-  const go = (v) => {
-    target = Math.max(0, Math.min(N - 1, v));
-    if (!raf) raf = requestAnimationFrame(tick);
-  };
-
-  // drag the scene: pull films through the curve
-  scene.addEventListener('pointerdown', (e) => {
-    dragging = 'scene'; moved = 0; startX = e.clientX; startP = p;
-    vstage.classList.add('dragging');
-  });
-  window.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
-    const dx = e.clientX - startX;
-    moved = Math.max(moved, Math.abs(dx));
-    p = startP - dx / (scene.clientWidth * 0.55);
-    p = Math.max(-0.3, Math.min(N - 0.7, p));
-    target = p; render();
-  }, { passive: true });
-  window.addEventListener('pointerup', () => {
-    if (!dragging) return;
-    dragging = null;
-    vstage.classList.remove('dragging');
-    go(Math.round(p)); // snap to the nearest film
-  });
-
-  // click the centered film (not a drag) → expand with sound
-  tiles.forEach((t, i) => t.addEventListener('click', (e) => {
-    if (moved > 8) { e.preventDefault(); return; }
-    if (i !== Math.round(p)) { go(i); return; }
-    openFilm(featureBtn ? i + 1 : i);
-  }));
+  const featureBtn = document.querySelector('.film-feature');
 
   // one film list for the expanded player: feature first, then the reels
-  const featureBtn = document.querySelector('.film-feature');
   const FILMS = [];
   if (featureBtn) FILMS.push({ src: featureBtn.dataset.video, poster: featureBtn.querySelector('video').getAttribute('poster'), label: 'Deerwood' });
   tiles.forEach((t) => FILMS.push({ src: t.dataset.video, poster: t.querySelector('video').getAttribute('poster'), label: (t.querySelector('.vtile-tag') || {}).textContent || 'Reel' }));
@@ -550,7 +468,6 @@ if (vstage) {
     [...strip.children].forEach((b, bi) => b.classList.toggle('on', bi === filmIdx));
   };
   const openFilm = (i) => {
-    tiles.forEach(t => t.querySelector('video').pause());
     if (featureBtn) featureBtn.querySelector('video').pause();
     flb.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -560,7 +477,8 @@ if (vstage) {
     flb.classList.remove('open');
     flbVideo.pause(); flbVideo.removeAttribute('src'); flbVideo.load();
     document.body.style.overflow = '';
-    render();
+    const fv = featureBtn && featureBtn.querySelector('video');
+    if (fv && fv.src) fv.play().catch(() => {});
   };
   flb.querySelector('.flb-prev').addEventListener('click', () => showFilm(filmIdx - 1));
   flb.querySelector('.flb-next').addEventListener('click', () => showFilm(filmIdx + 1));
@@ -573,36 +491,31 @@ if (vstage) {
     if (e.key === 'ArrowRight') showFilm(filmIdx + 1);
   });
 
-  // side arrows on the muted carousel
-  const mkNav = (cls, label, dir) => {
+  // reel thumbnails on the page: tap one to watch it
+  const vthumbs = document.createElement('div');
+  vthumbs.className = 'vthumbs films-row';
+  vthumbs.setAttribute('aria-label', 'All reels');
+  tiles.forEach((t, i) => {
     const b = document.createElement('button');
-    b.className = 'vnav ' + cls;
-    b.setAttribute('aria-label', label);
-    b.textContent = dir < 0 ? '‹' : '›';
-    b.addEventListener('pointerdown', (e) => e.stopPropagation());
-    b.addEventListener('click', (e) => { e.stopPropagation(); go(Math.round(target) + dir); });
-    scene.appendChild(b);
-    return b;
-  };
-  navPrev = mkNav('vnav-prev', 'Previous reel', -1);
-  navNext = mkNav('vnav-next', 'Next reel', 1);
+    b.className = 'vthumb';
+    b.setAttribute('aria-label', 'Play ' + ((t.querySelector('.vtile-tag') || {}).textContent || 'reel ' + (i + 1)));
+    b.innerHTML = '<img src="' + t.querySelector('video').getAttribute('poster') + '" alt="">';
+    b.addEventListener('click', () => openFilm(featureBtn ? i + 1 : i));
+    vthumbs.appendChild(b);
+  });
+  vstage.appendChild(vthumbs);
 
-  // featured wide film
-  const feature = document.querySelector('.film-feature');
-  if (feature) {
-    const fv = feature.querySelector('video');
+  // featured wide film auto-plays in view
+  if (featureBtn) {
+    const fv = featureBtn.querySelector('video');
     new IntersectionObserver((es) => {
       es.forEach((en) => {
-        if (en.isIntersecting) { fv.src = fv.dataset.src; fv.play().catch(() => {}); }
+        if (en.isIntersecting) { if (!fv.src) fv.src = fv.dataset.src; fv.play().catch(() => {}); }
         else fv.pause();
       });
-    }, { threshold: 0.4 }).observe(feature);
-    feature.addEventListener('click', () => openFilm(0));
+    }, { threshold: 0.4 }).observe(featureBtn);
+    featureBtn.addEventListener('click', () => openFilm(0));
   }
-
-  window.addEventListener('resize', render);
-  window.addEventListener('load', render);
-  render();
 }
 
 /* ═══ founders drift: slow marquee, drag to steer, press to feel it ═══ */

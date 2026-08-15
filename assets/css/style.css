@@ -879,11 +879,8 @@ h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-he
 }
 
 /* ═══ curved film carousel: one at a time ═══ */
-.vstage{cursor:grab;overflow:hidden}
-.vstage.dragging{cursor:grabbing}
-.vstage-scene{
-  position:relative;height:min(56vh,540px);margin:1rem 0 0;
-}
+.vstage{overflow:hidden}
+.vstage-scene{display:none}
 .vstage .vtile{
   position:absolute;left:50%;top:50%;margin:0;
   transform-style:preserve-3d;backface-visibility:hidden;
@@ -1007,3 +1004,10 @@ h1.label{font-family:"Outfit",sans-serif;font-weight:500;font-size:.7rem;line-he
   .drift .up{transform:translateY(-.8rem)}
   .drift .dn{transform:translateY(.8rem)}
 }
+
+/* films row: reel posters under the featured film */
+.vthumbs.films-row{margin:0 auto 1rem;gap:.9rem}
+.vthumbs.films-row .vthumb{opacity:.8}
+.vthumbs.films-row .vthumb:hover{opacity:1;border-color:var(--copper)}
+.vthumbs.films-row .vthumb img{height:120px}
+@media(max-width:700px){.vthumbs.films-row .vthumb img{height:84px}}
