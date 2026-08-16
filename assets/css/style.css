@@ -546,7 +546,8 @@ html:not(.no-js) [data-stagger]>*:not(.revealed){opacity:0;transform:translateY(
   .scorecard .row .par{grid-column:1/-1}
 }
 @media(max-width:560px){
-  .masonry{columns:1}
+  .masonry{columns:2;column-gap:.6rem}
+  .masonry>*{margin-bottom:.6rem}
   .rail-card{flex-basis:86vw}
   .reserve-form{flex-direction:column;gap:.8rem}
   .reserve-form input{border-right:1px solid var(--line);border-radius:2px}
